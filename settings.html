@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum | Settings</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1>SPECTRUM</h1>
+        <a href="index.html" class="nav-btn pink">HOME</a>
+        <a href="games.html" class="nav-btn blue">GAMES</a>
+        <a href="settings.html" class="nav-btn pink" style="color: white; border-left: 3px solid var(--primary);">SETTINGS</a>
+    </div>
+
+    <div class="main-content">
+        <h2 style="font-family:'Orbitron'; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px;">SETTINGS</h2>
+
+        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+            <h3 style="margin-bottom: 15px;">Tab Cloaker</h3>
+            <p style="color:#ccc; font-size: 0.9rem; margin-bottom: 10px;">Change the browser tab name to hide what you are doing.</p>
+            <input type="text" id="tabTitleInput" placeholder="Enter new tab name (e.g., Google Classroom)" style="width: 70%;">
+            <button class="action-btn" onclick="changeTabTitle()" style="width: 25%; padding: 15px;">Set Title</button>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+            <h3 style="margin-bottom: 15px;">About:Blank Launch</h3>
+            <p style="color:#ccc; font-size: 0.9rem; margin-bottom: 10px;">Open Spectrum in a blank window to bypass history logging.</p>
+            <button class="action-btn" onclick="openAboutBlank()" style="width: 200px;">Launch Cloak</button>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px;">
+            <h3 style="margin-bottom: 15px;">Theme Customizer</h3>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div>
+                    <label>Primary Color (Pink)</label><br>
+                    <input type="color" id="primaryColor" value="#ff00ff" onchange="updateTheme()">
+                </div>
+                <div>
+                    <label>Secondary Color (Blue)</label><br>
+                    <input type="color" id="secondaryColor" value="#00ffff" onchange="updateTheme()">
+                </div>
+                <button class="action-btn" onclick="resetTheme()" style="width: 150px; padding: 10px;">Reset Default</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. TAB TITLE CHANGER
+        function changeTabTitle() {
+            const newTitle = document.getElementById('tabTitleInput').value;
+            if (newTitle) {
+                document.title = newTitle;
+                localStorage.setItem('spectrumTitle', newTitle);
+                alert("Tab title changed!");
+            }
+        }
+
+        // Check for saved title on load
+        if (localStorage.getItem('spectrumTitle')) {
+            document.title = localStorage.getItem('spectrumTitle');
+        }
+
+        // 2. ABOUT BLANK CLOAKER
+        function openAboutBlank() {
+            let win = window.open();
+            win.document.body.style.margin = '0';
+            win.document.body.style.height = '100vh';
+            let iframe = win.document.createElement('iframe');
+            iframe.style.border = 'none';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.margin = '0';
+            iframe.src = window.location.href; // Opens the current page
+            win.document.body.appendChild(iframe);
+        }
+
+        // 3. THEME CHANGER
+        function updateTheme() {
+            const prim = document.getElementById('primaryColor').value;
+            const sec = document.getElementById('secondaryColor').value;
+            
+            // Apply to CSS variables
+            document.documentElement.style.setProperty('--primary', prim);
+            document.documentElement.style.setProperty('--secondary', sec);
+
+            // Save to storage
+            localStorage.setItem('primaryColor', prim);
+            localStorage.setItem('secondaryColor', sec);
+        }
+
+        function resetTheme() {
+            document.documentElement.style.setProperty('--primary', '#ff00ff');
+            document.documentElement.style.setProperty('--secondary', '#00ffff');
+            localStorage.removeItem('primaryColor');
+            localStorage.removeItem('secondaryColor');
+            document.getElementById('primaryColor').value = '#ff00ff';
+            document.getElementById('secondaryColor').value = '#00ffff';
+        }
+
+        // Apply saved theme on load
+        const savedPrim = localStorage.getItem('primaryColor');
+        const savedSec = localStorage.getItem('secondaryColor');
+        if (savedPrim) {
+            document.documentElement.style.setProperty('--primary', savedPrim);
+            document.getElementById('primaryColor').value = savedPrim;
+        }
+        if (savedSec) {
+            document.documentElement.style.setProperty('--secondary', savedSec);
+            document.getElementById('secondaryColor').value = savedSec;
+        }
+    </script>
+
+    <script src="dots.js"></script>
+</body>
+</html>
