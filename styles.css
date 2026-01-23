@@ -108,3 +108,18 @@ input[type="text"], input[type="color"] {
     background: linear-gradient(135deg, var(--secondary), var(--primary)); 
     color: black;
 }
+/* --- THE GAMES GRID LAYOUT --- */
+.games-grid {
+    display: grid;
+    /* This creates the columns. 220px is the minimum button width. */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    
+    /* THE SPACING: Increase this number for more room between buttons */
+    gap: 30px; 
+    
+    padding-top: 20px;
+}
+
+.games-grid a {
+    text-decoration: none;
+}
