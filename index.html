@@ -3,22 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectrum</title>
+    <title>Spectrum | Home</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <h1>SPECTRUM</h1>
-    <p class="subtitle">more added soon.</p>
-
-    <div class="nav-container">
-        <a href="index.html"><button class="nav-btn pink">HOME</button></a>
-        <a href="games.html"><button class="nav-btn blue">GAMES</button></a>
+    <div class="sidebar">
+        <h1>SPECTRUM</h1>
+        <a href="index.html" class="nav-btn pink">HOME</a>
+        <a href="games.html" class="nav-btn blue">GAMES</a>
+        <a href="#" class="nav-btn pink">SETTINGS</a>
     </div>
 
-    <div style="margin-top: 50px; opacity: 0.5;">
-        Welcome to the new era...
+    <div class="main-content" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100vh;">
+        
+        <div class="hero-section">
+            <h1 style="font-family: 'Orbitron', sans-serif; font-size: 5rem; background: linear-gradient(to right, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">
+                SPECTRUM
+            </h1>
+            <p style="font-size: 1.5rem; color: #888; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 40px;">
+                The Gradient Arcade
+            </p>
+            
+            <a href="games.html" style="text-decoration: none;">
+                <button class="game-btn" style="width: 300px; font-size: 1.2rem; padding: 20px;">
+                    ENTER ARCADE
+                </button>
+            </a>
+        </div>
+
+        <div style="margin-top: 50px; color: rgba(255,255,255,0.3); font-size: 0.9rem;">
+            Experience gaming in high-definition neon.
+        </div>
     </div>
+
+    <script src="dots.js"></script>
 
 </body>
 </html>
