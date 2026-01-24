@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum - Home</title>
+    
+    <script>
+        if (localStorage.getItem("access") !== "granted") {
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1>SPECTRUM</h1>
+        <a href="home.html" class="nav-btn pink" style="color: white; border-left: 3px solid var(--primary);">HOME</a>
+        <a href="games.html" class="nav-btn blue">GAMES</a>
+        <a href="settings.html" class="nav-btn pink">SETTINGS</a>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-section">
+            <h1>Welcome back to Spectrum</h1>
+            <p>Select a category or search for your favorite games.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dash-card">
+                <h3>Quick Play</h3>
+                <p>Jump back into your recently played games.</p>
+                <a href="games.html" class="game-btn">View All Games</a>
+            </div>
+            
+            <div class="dash-card">
+                <h3>Customize</h3>
+                <p>Change the colors and look of your dashboard.</p>
+                <a href="settings.html" class="game-btn" style="background-color: var(--primary);">Settings</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="dots.js"></script>
+
+    <script>
+        // Apply saved settings
+        if (localStorage.getItem('spectrumTitle')) { document.title = localStorage.getItem('spectrumTitle'); }
+        if (localStorage.getItem('primaryColor')) { document.documentElement.style.setProperty('--primary', localStorage.getItem('primaryColor')); }
+        if (localStorage.getItem('secondaryColor')) { document.documentElement.style.setProperty('--secondary', localStorage.getItem('secondaryColor')); }
+    </script>
+</body>
+</html>
