@@ -3,41 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectrum | Home</title>
-    <link rel="stylesheet" href="styles.css?v=1.1">
+    <title>Spectrum Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212; /* Fallback if styles.css fails */
+        }
+        .login-box {
+            background-color: var(--card-bg, #1e1e1e);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--primary, #ff00ff);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            width: 300px;
+        }
+        .login-box h1 {
+            color: white;
+            margin-bottom: 20px;
+            font-family: sans-serif;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #2a2a2a;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box; /* Fixes padding issues */
+        }
+        .login-btn {
+            background-color: var(--secondary, #00ffff);
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--secondary, #00ffff);
+        }
+        .error-msg {
+            color: red;
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+        }
+    </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h1>SPECTRUM</h1>
-        <a href="index.html" class="nav-btn pink">HOME</a>
-        <a href="games.html" class="nav-btn blue">GAMES</a>
-        <a href="settings.html" class="nav-btn pink">SETTINGS</a>
+    <div class="login-box">
+        <h1>LOCKED</h1>
+        <input type="password" id="passInput" class="login-input" placeholder="Enter Password...">
+        <button onclick="checkPass()" class="login-btn">ENTER</button>
+        <p id="error" class="error-msg">ACCESS DENIED</p>
     </div>
 
-    <div class="main-content" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100vh;">
-        
-        <div class="hero-section">
-            <h1 style="font-family: 'Orbitron', sans-serif; font-size: 5rem; background: linear-gradient(to right, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">
-                SPECTRUM
-            </h1>
-            <p style="font-size: 1.5rem; color: #888; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 40px;">
-               For the GD Level Spectre
-            </p>
-            
-            <a href="games.html" style="text-decoration: none;">
-                <button class="game-btn" style="width: 300px; font-size: 1.2rem; padding: 20px;">
-                    PLAY NOW
-                </button>
-            </a>
-        </div>
+    <script>
+        // Check if user pressed "Enter" key
+        var input = document.getElementById("passInput");
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkPass();
+            }
+        });
 
-        <div style="margin-top: 50px; color: rgba(255,255,255,0.3); font-size: 0.9rem;">
-            
-        </div>
-    </div>
+        function checkPass() {
+            var password = document.getElementById("passInput").value;
+            var errorMsg = document.getElementById("error");
 
-    <script src="dots.js"></script>
+            // THIS IS WHERE THE PASSWORD IS SET
+            if (password === "kleen") {
+                // Save a "key" in the browser so they stay logged in
+                localStorage.setItem("spectrum_access", "granted");
+                // Redirect to the main home page
+                window.location.href = "index.html";
+            } else {
+                errorMsg.style.display = "block";
+                input.value = ""; // Clear input
+            }
+        }
+    </script>
 
 </body>
 </html>
