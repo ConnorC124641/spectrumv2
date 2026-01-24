@@ -7,12 +7,6 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-    <script>
-        if (document.cookie.indexOf("spectrum_access=true") !== -1) {
-            window.location.href = "home.html";
-        }
-    </script>
-
     <style>
         body {
             display: flex;
@@ -21,7 +15,7 @@
             height: 100vh;
             margin: 0;
             background-color: #050505;
-            font-family: 'Orbitron', sans-serif; /* NEW FONT */
+            font-family: 'Orbitron', sans-serif;
             overflow: hidden;
             color: white;
         }
@@ -30,30 +24,48 @@
             padding: 50px;
             border-radius: 20px;
             text-align: center;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15);
+            border: 2px solid #00ffff; /* Bright Cyan Border */
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
             width: 320px;
-            animation: float 6s ease-in-out infinite;
         }
         h1 { 
             margin-bottom: 30px; 
             letter-spacing: 3px;
             text-shadow: 0 0 10px #00ffff;
         }
+        /* VISIBILITY FIX: */
         input {
-            width: 100%; padding: 15px; margin-bottom: 25px;
-            border-radius: 8px; border: 1px solid #333; 
-            background: #222; color: #00ffff;
-            box-sizing: border-box; text-align: center; 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 25px;
+            border-radius: 8px; 
+            border: 2px solid #333; 
+            background: #222; 
+            color: white; /* White text */
+            box-sizing: border-box; 
+            text-align: center; 
             font-family: 'Orbitron', sans-serif;
             font-size: 18px;
             outline: none;
         }
-        input:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.2); }
+        input::placeholder {
+            color: #888;
+        }
+        input:focus { 
+            border-color: #00ffff; 
+            box-shadow: 0 0 15px rgba(0,255,255,0.2); 
+        }
         button {
-            width: 100%; padding: 15px; border: none; border-radius: 8px;
-            background-color: #00ffff; color: black; font-weight: 900;
-            cursor: pointer; font-size: 18px; transition: 0.3s;
+            width: 100%; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 8px;
+            background-color: #00ffff; 
+            color: black; 
+            font-weight: 900;
+            cursor: pointer; 
+            font-size: 18px; 
+            transition: 0.3s;
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 2px;
         }
@@ -61,12 +73,11 @@
             transform: scale(1.05); 
             box-shadow: 0 0 25px #00ffff;
         }
-        .error { color: #ff0055; margin-top: 20px; display: none; text-shadow: 0 0 5px #ff0055; }
-        
-        @keyframes float { 
-            0% { transform: translateY(0px); } 
-            50% { transform: translateY(-10px); } 
-            100% { transform: translateY(0px); } 
+        .error { 
+            color: #ff0055; 
+            margin-top: 20px; 
+            display: none; 
+            text-shadow: 0 0 5px #ff0055; 
         }
     </style>
 </head>
@@ -75,3 +86,36 @@
     <div class="login-box">
         <h1>LOCKED</h1>
         
+        <input type="password" id="pass" placeholder="ENTER PASSCODE">
+        
+        <button onclick="login()">UNLOCK</button>
+        
+        <p id="msg" class="error">ACCESS DENIED</p>
+    </div>
+
+    <script>
+        // Check for Enter key
+        document.getElementById("pass").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") login();
+        });
+
+        function login() {
+            var input = document.getElementById("pass").value;
+            
+            // PASSWORD IS HERE
+            if (input === "kleen") {
+                // Set cookie for iPad/Safari support
+                var d = new Date();
+                d.setTime(d.getTime() + (30*24*60*60*1000));
+                var expires = "expires="+ d.toUTCString();
+                document.cookie = "spectrum_access=true;" + expires + ";path=/";
+                
+                window.location.href = "home.html";
+            } else {
+                document.getElementById("msg").style.display = "block";
+                document.getElementById("pass").value = "";
+            }
+        }
+    </script>
+</body>
+</html>
