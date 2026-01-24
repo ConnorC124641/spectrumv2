@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-    if (localStorage.getItem("access") !== "granted") {
-        window.location.href = "index.html";
-    }
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spectrum Games</title>
-    <link rel="stylesheet" href="styles.css?v=4">
+    
+    <script>
+        if (localStorage.getItem("access") !== "granted") {
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -22,42 +24,42 @@
 
     <div class="main-content">
         
-        <input type="text" id="searchBar" placeholder="Search Through 282 Games..." onkeyup="filterGames()">
+        <input type="text" id="searchBar" placeholder="Search Spectrum..." onkeyup="filterGames()">
 
         <div class="games-grid" id="gameList">
             
             <a href="cl1.html"><button class="game-btn">1</button></a>
-            <a href="cl10bullets.html"><button class="game-btn">10 Bullets</button></a>
-            <a href="cl10minutestildawn.html"><button class="game-btn">10 Minutes Til Dawn</button></a>
-            <a href="cl10morebullets.html"><button class="game-btn">10 More Bullets</button></a>
-            <a href="cl12minibattles.html"><button class="game-btn">12 Mini Battles</button></a>
-            <a href="cl1on1soccer.html"><button class="game-btn">1 on 1 Soccer</button></a>
+            <a href="cl1on1soccer.html"><button class="game-btn">1 On 1 Soccer</button></a>
             <a href="cl1v1lol.html"><button class="game-btn">1v1.lol</button></a>
             <a href="cl1v1tennis.html"><button class="game-btn">1v1 Tennis</button></a>
-            <a href="cl2048.html"><button class="game-btn">2048</button></a>
-            <a href="cl2048cupcakes.html"><button class="game-btn">2048 Cupcakes</button></a>
-            <a href="cl20smallmazes.html"><button class="game-btn">20 Small Mazes</button></a>
-            <a href="cl234playergame.html"><button class="game-btn">2 3 4 Player Game</button></a>
             <a href="cl2Dshooting.html"><button class="game-btn">2D Shooting</button></a>
             <a href="cl2doom.html"><button class="game-btn">2Doom</button></a>
-            <a href="cl3dash.html"><button class="game-btn">3Dash</button></a>
+            <a href="cl234playergame.html"><button class="game-btn">2 3 4 Player Game</button></a>
+            <a href="cl3dash.html"><button class="game-btn">3 Dash</button></a>
             <a href="cl3pandas.html"><button class="game-btn">3 Pandas</button></a>
             <a href="cl3pandasbrazil.html"><button class="game-btn">3 Pandas Brazil</button></a>
             <a href="cl3pandasfantasy.html"><button class="game-btn">3 Pandas Fantasy</button></a>
             <a href="cl3pandasjapan.html"><button class="game-btn">3 Pandas Japan</button></a>
             <a href="cl3pandasnight.html"><button class="game-btn">3 Pandas Night</button></a>
             <a href="cl3slices2.html"><button class="game-btn">3 Slices 2</button></a>
-            <a href="cl40xescape.html"><button class="game-btn">40x Escape</button></a>
             <a href="cl4thandgoal.html"><button class="game-btn">4th and Goal</button></a>
-            <a href="cl500calibercontractz.html"><button class="game-btn">500 Caliber Contracts</button></a>
+            <a href="cl40xescape.html"><button class="game-btn">40x Escape</button></a>
+            <a href="cl8ballclassic.html"><button class="game-btn">8 Ball Classic</button></a>
+            <a href="cl8ballpool.html"><button class="game-btn">8 Ball Pool</button></a>
+            <a href="cl10bullets.html"><button class="game-btn">10 Bullets</button></a>
+            <a href="cl10minutestildawn.html"><button class="game-btn">10 Minutes Til Dawn</button></a>
+            <a href="cl10morebullets.html"><button class="game-btn">10 More Bullets</button></a>
+            <a href="cl12minibattles.html"><button class="game-btn">12 Mini Battles</button></a>
+            <a href="cl20smallmazes.html"><button class="game-btn">20 Small Mazes</button></a>
+            <a href="cl2048.html"><button class="game-btn">2048</button></a>
+            <a href="cl2048cupcakes.html"><button class="game-btn">2048 Cupcakes</button></a>
             <a href="cl60secondsburgerrun.html"><button class="game-btn">60 Seconds Burger</button></a>
             <a href="cl60secondssantarun.html"><button class="game-btn">60 Seconds Santa</button></a>
             <a href="cl64in1nes.html"><button class="game-btn">64 in 1 NES</button></a>
-            <a href="cl8ballclassic.html"><button class="game-btn">8 Ball Classic</button></a>
-            <a href="cl8ballpool.html"><button class="game-btn">8 Ball Pool</button></a>
-            <a href="cl9007199254740992.html"><button class="game-btn">9007199254740992</button></a>
             <a href="cl99balls.html"><button class="game-btn">99 Balls</button></a>
             <a href="cl99nightsitf.html"><button class="game-btn">99 Nights ITF</button></a>
+            <a href="cl500calibercontractz.html"><button class="game-btn">500 Caliber Contracts</button></a>
+            <a href="cl9007199254740992.html"><button class="game-btn">9007199254740992</button></a>
 
             <a href="clabandoned3.html"><button class="game-btn">Abandoned 3</button></a>
             <a href="clabsolutemadness.html"><button class="game-btn">Absolute Madness</button></a>
@@ -72,13 +74,13 @@
             <a href="clachievmentunlocked3.html"><button class="game-btn">Achievement Unlocked 3</button></a>
             <a href="clADarkRoom.html"><button class="game-btn">A Dark Room</button></a>
             <a href="cladayintheoffice.html"><button class="game-btn">A Day in the Office</button></a>
-            <a href="cladatewithdeath.html"><button class="game-btn">A Date with Death</button></a>
+            <a href="cladatewithdeath.html"><button class="game-btn">A Date With Death</button></a>
             <a href="clADOFAI.html"><button class="game-btn">ADOFAI</button></a>
             <a href="cladvancewars.html"><button class="game-btn">Advance Wars</button></a>
             <a href="cladvancewars2.html"><button class="game-btn">Advance Wars 2</button></a>
             <a href="cladventneon.html"><button class="game-btn">Advent Neon</button></a>
-            <a href="clAdventureCapatalist.html"><button class="game-btn">Adventure Capitalist</button></a>
-            <a href="cladventurecapitalist.html"><button class="game-btn">Adv. Capitalist (Alt)</button></a>
+            <a href="cladventurecapitalist.html"><button class="game-btn">Adventure Capitalist</button></a>
+            <a href="clAdventureCapatalist.html"><button class="game-btn">Adventure Capitalist (Alt)</button></a>
             <a href="clagariolite.html"><button class="game-btn">Agario Lite</button></a>
             <a href="clageofwar.html"><button class="game-btn">Age of War</button></a>
             <a href="clageofwar2.html"><button class="game-btn">Age of War 2</button></a>
@@ -86,18 +88,18 @@
             <a href="clahoysurvival.html"><button class="game-btn">Ahoy Survival</button></a>
             <a href="clai.html"><button class="game-btn">AI</button></a>
             <a href="clairlinetycoonidle.html"><button class="game-btn">Airline Tycoon Idle</button></a>
+            <a href="clakumanorgaiden.html"><button class="game-btn">Akuma Manor Gaiden</button></a>
             <a href="clakoopasrevenge.html"><button class="game-btn">Koopa's Revenge</button></a>
             <a href="clakoopasrevenge2.html"><button class="game-btn">Koopa's Revenge 2</button></a>
-            <a href="clakumanorgaiden.html"><button class="game-btn">Akuma Manor Gaiden</button></a>
             <a href="clalienhominid.html"><button class="game-btn">Alien Hominid</button></a>
             <a href="clalienhominidgba.html"><button class="game-btn">Alien Hominid GBA</button></a>
             <a href="clalienskyinvasion.html"><button class="game-btn">Alien Sky Invasion</button></a>
             <a href="clalientransporter.html"><button class="game-btn">Alien Transporter</button></a>
             <a href="clalienvspredator.html"><button class="game-btn">Alien vs Predator</button></a>
-            <a href="clallbossesin1.html"><button class="game-btn">All Bosses in 1</button></a>
+            <a href="clallbossesin1.html"><button class="game-btn">All Bosses In 1</button></a>
             <a href="clallocation.html"><button class="game-btn">Allocation</button></a>
-            <a href="clamaze.html"><button class="game-btn">A-Maze</button></a>
-            <a href="clamidstthesky.html"><button class="game-btn">Amidst the Sky</button></a>
+            <a href="clamaze.html"><button class="game-btn">A Maze</button></a>
+            <a href="clamidstthesky.html"><button class="game-btn">Amidst The Sky</button></a>
             <a href="clamigopancho.html"><button class="game-btn">Amigo Pancho</button></a>
             <a href="clamigopancho2.html"><button class="game-btn">Amigo Pancho 2</button></a>
             <a href="clamigopancho3.html"><button class="game-btn">Amigo Pancho 3</button></a>
@@ -127,7 +129,7 @@
             <a href="clarthursnightmare.html"><button class="game-btn">Arthur's Nightmare</button></a>
             <a href="clascent.html"><button class="game-btn">Ascent</button></a>
             <a href="clasmallworldcup.html"><button class="game-btn">A Small World Cup</button></a>
-            <a href="classesmentexaminationque.html"><button class="game-btn">Assessment Exam</button></a>
+            <a href="classesmentexaminationque.html"><button class="game-btn">Assessment Examination</button></a>
             <a href="clasteroids.html"><button class="game-btn">Asteroids</button></a>
             <a href="clasteroidsALT.html"><button class="game-btn">Asteroids (Alt)</button></a>
             <a href="clatariadventure.html"><button class="game-btn">Atari Adventure</button></a>
@@ -135,14 +137,14 @@
             <a href="clavalanche.html"><button class="game-btn">Avalanche</button></a>
             <a href="claviamasters.html"><button class="game-btn">Avia Masters</button></a>
             <a href="claviamastersbuggy.html"><button class="game-btn">Avia Masters (Buggy)</button></a>
-            <a href="clawesomeplanes.html"><button class="game-btn">Awesome Planes</button></a>
             <a href="clAwesomePirates.html"><button class="game-btn">Awesome Pirates</button></a>
+            <a href="clawesomeplanes.html"><button class="game-btn">Awesome Planes</button></a>
             <a href="clawesometanks.html"><button class="game-btn">Awesome Tanks</button></a>
             <a href="clawesometanks2.html"><button class="game-btn">Awesome Tanks 2</button></a>
 
             <a href="clB3313.html"><button class="game-btn">B3313</button></a>
             <a href="clbabeltower.html"><button class="game-btn">Babel Tower</button></a>
-            <a href="clbabychiccoadventure.html"><button class="game-btn">Baby Chicco Adventure</button></a>
+            <a href="clbabychiccoadventure.html"><button class="game-btn">Baby Chicco Adv.</button></a>
             <a href="clbabykaizo.html"><button class="game-btn">Baby Kaizo</button></a>
             <a href="clbabysniperinvietnam.html"><button class="game-btn">Baby Sniper Vietnam</button></a>
             <a href="clbackrooms.html"><button class="game-btn">Backrooms</button></a>
@@ -182,7 +184,7 @@
             <a href="clbaseballbros.html"><button class="game-btn">Baseball Bros</button></a>
             <a href="clbasketballfrvr.html"><button class="game-btn">Basketball FRVR</button></a>
             <a href="clbasketballlegends.html"><button class="game-btn">Basketball Legends</button></a>
-            <a href="clbasketballlegends(1).html"><button class="game-btn">Basketball Legends 1</button></a>
+            <a href="clbasketballlegends(1).html"><button class="game-btn">Basketball Legends (1)</button></a>
             <a href="clbasketballstars.html"><button class="game-btn">Basketball Stars</button></a>
             <a href="clbasketballsuperstars.html"><button class="game-btn">Basketball Superstars</button></a>
             <a href="clbasketbattle.html"><button class="game-btn">Basket Battle</button></a>
@@ -245,12 +247,12 @@
             <a href="clbloonspp4.html"><button class="game-btn">Bloons Pack 4</button></a>
             <a href="clbloonspp5.html"><button class="game-btn">Bloons Pack 5</button></a>
             <a href="clBTD1.html"><button class="game-btn">Bloons TD 1</button></a>
-            <a href="clbloonsTD1.html"><button class="game-btn">Bloons TD 1 Alt</button></a>
+            <a href="clbloonsTD1.html"><button class="game-btn">Bloons TD 1 (Alt)</button></a>
             <a href="clbloonsTD2.html"><button class="game-btn">Bloons TD 2</button></a>
             <a href="clbloonsTD3.html"><button class="game-btn">Bloons TD 3</button></a>
             <a href="clbloonsTD4.html"><button class="game-btn">Bloons TD 4</button></a>
             <a href="clbloonsTD5.html"><button class="game-btn">Bloons TD 5</button></a>
-            <a href="clbtd5.html"><button class="game-btn">Bloons TD 5 Alt</button></a>
+            <a href="clbtd5.html"><button class="game-btn">Bloons TD 5 (Alt)</button></a>
             <a href="clbloonsTD6scratch.html"><button class="game-btn">Bloons TD 6 Scratch</button></a>
             <a href="clbloxorz.html"><button class="game-btn">Bloxorz</button></a>
             <a href="clblumgiracers.html"><button class="game-btn">Blumgi Racers</button></a>
@@ -275,10 +277,10 @@
             <a href="clBountyOfOne.html"><button class="game-btn">Bounty Of One</button></a>
             <a href="clbowlalt.html"><button class="game-btn">Bowl (Alt)</button></a>
             <a href="clbowmaster.html"><button class="game-btn">Bowmaster</button></a>
-            <a href="clboxhead2playrooms.html"><button class="game-btn">Boxhead 2Play Rooms</button></a>
+            <a href="clboxhead2playrooms.html"><button class="game-btn">Boxhead 2Play</button></a>
             <a href="clboxheadnightmare.html"><button class="game-btn">Boxhead Nightmare</button></a>
             <a href="clboxinglive-2.html"><button class="game-btn">Boxing Live 2</button></a>
-            <a href="clboxinglive2.html"><button class="game-btn">Boxing Live 2 Alt</button></a>
+            <a href="clboxinglive2.html"><button class="game-btn">Boxing Live 2 (Alt)</button></a>
             <a href="clboxingrandom.html"><button class="game-btn">Boxing Random</button></a>
             <a href="clbrainrot.html"><button class="game-btn">Brain Rot</button></a>
             <a href="clbridgerace.html"><button class="game-btn">Bridge Race</button></a>
@@ -296,7 +298,7 @@
             <a href="clbuildnowgg.html"><button class="game-btn">BuildNow GG</button></a>
             <a href="clbulletforce.html"><button class="game-btn">Bullet Force</button></a>
             <a href="clbunnyland.html"><button class="game-btn">Bunnyland</button></a>
-            <a href="clburgerandfrights.html"><button class="game-btn">Burger and Frights</button></a>
+            <a href="clburgerandfrights.html"><button class="game-btn">Burger And Frights</button></a>
             <a href="clburritobison.html"><button class="game-btn">Burrito Bison</button></a>
             <a href="clburritobison2.html"><button class="game-btn">Burrito Bison 2</button></a>
             <a href="clburritobisonlaunchalibre.html"><button class="game-btn">Burrito Bison Launch</button></a>
