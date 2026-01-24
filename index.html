@@ -1,28 +1,77 @@
-<script>
-    // Check for Enter key
-    document.getElementById("pass").addEventListener("keypress", function(e) {
-        if (e.key === "Enter") login();
-    });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum - Locked</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-    // AUTO-SKIP: Check cookie
-    if (document.cookie.indexOf("spectrum_access=true") !== -1) {
-        window.location.href = "home.html";
-    }
-
-    function login() {
-        var input = document.getElementById("pass").value;
-        
-        if (input === "kleen") {
-            // SET A COOKIE FOR 30 DAYS
-            var d = new Date();
-            d.setTime(d.getTime() + (30*24*60*60*1000));
-            var expires = "expires="+ d.toUTCString();
-            document.cookie = "spectrum_access=true;" + expires + ";path=/";
-            
+    <script>
+        if (document.cookie.indexOf("spectrum_access=true") !== -1) {
             window.location.href = "home.html";
-        } else {
-            document.getElementById("msg").style.display = "block";
-            document.getElementById("pass").value = "";
         }
-    }
-</script>
+    </script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #050505;
+            font-family: 'Orbitron', sans-serif; /* NEW FONT */
+            overflow: hidden;
+            color: white;
+        }
+        .login-box {
+            background-color: #111;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15);
+            width: 320px;
+            animation: float 6s ease-in-out infinite;
+        }
+        h1 { 
+            margin-bottom: 30px; 
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        input {
+            width: 100%; padding: 15px; margin-bottom: 25px;
+            border-radius: 8px; border: 1px solid #333; 
+            background: #222; color: #00ffff;
+            box-sizing: border-box; text-align: center; 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            outline: none;
+        }
+        input:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.2); }
+        button {
+            width: 100%; padding: 15px; border: none; border-radius: 8px;
+            background-color: #00ffff; color: black; font-weight: 900;
+            cursor: pointer; font-size: 18px; transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+        button:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0 0 25px #00ffff;
+        }
+        .error { color: #ff0055; margin-top: 20px; display: none; text-shadow: 0 0 5px #ff0055; }
+        
+        @keyframes float { 
+            0% { transform: translateY(0px); } 
+            50% { transform: translateY(-10px); } 
+            100% { transform: translateY(0px); } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h1>LOCKED</h1>
+        
