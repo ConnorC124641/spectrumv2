@@ -11,7 +11,45 @@
         }
     </script>
 
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=6">
+    <style>
+        /* This centers everything specifically for the home screen */
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh; /* Keeps it centered vertically */
+            text-align: center;
+        }
+
+        .start-btn {
+            background-color: var(--secondary, #00ffff);
+            color: #000;
+            padding: 20px 60px;
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px var(--secondary);
+            letter-spacing: 2px;
+        }
+
+        .welcome-text {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
 
@@ -23,23 +61,11 @@
     </div>
 
     <div class="main-content">
-        <div class="welcome-section">
-            <h1>Welcome back to Spectrum</h1>
-            <p>Select a category or search for your favorite games.</p>
-        </div>
-
-        <div class="dashboard-grid">
-            <div class="dash-card">
-                <h3>Quick Play</h3>
-                <p>Jump back into your recently played games.</p>
-                <a href="games.html" class="game-btn">View All Games</a>
-            </div>
+        <div class="hero-container">
+            <h1 style="color: white; font-size: 3rem; margin-bottom: 10px;">SPECTRUM</h1>
+            <p class="welcome-text">Your library is ready.</p>
             
-            <div class="dash-card">
-                <h3>Customize</h3>
-                <p>Change the colors and look of your dashboard.</p>
-                <a href="settings.html" class="game-btn" style="background-color: var(--primary);">Settings</a>
-            </div>
+            <a href="games.html" class="start-btn">START PLAYING</a>
         </div>
     </div>
 
