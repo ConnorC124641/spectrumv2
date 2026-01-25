@@ -8,10 +8,17 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* Essential Layout overrides to ensure Sidebar works if style.css is missing them */
-        body { display: flex; overflow-x: hidden; margin: 0; background-color: #050505; color: white; font-family: 'Orbitron', sans-serif; }
+        /* --- LAYOUT OVERRIDES (To ensure Old Sidebar & Big Buttons work) --- */
+        body { 
+            display: flex; 
+            margin: 0; 
+            background-color: #050505; 
+            color: white; 
+            font-family: 'Orbitron', sans-serif; 
+            overflow-x: hidden;
+        }
         
-        /* Sidebar Styling defaults */
+        /* 1. OLD SIDEBAR STYLE */
         .sidebar {
             height: 100vh;
             width: 250px;
@@ -20,27 +27,78 @@
             left: 0;
             background-color: #111;
             padding-top: 20px;
-            border-right: 2px solid #333; /* Will be colored by JS */
+            border-right: 3px solid #333; /* Color will be injected by JS */
             z-index: 100;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.5);
         }
         .sidebar a {
-            padding: 15px 25px;
+            padding: 20px 25px;
             text-decoration: none;
             font-size: 18px;
             color: #818181;
             display: block;
             transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .sidebar a:hover { color: #f1f1f1; }
+        .sidebar a:hover { 
+            color: #f1f1f1; 
+            background: rgba(255,255,255,0.05);
+            padding-left: 35px; /* Slide effect */
+        }
 
-        /* Content Area */
+        /* Content Area shift */
         .main-content {
-            margin-left: 250px; /* Same as sidebar width */
-            padding: 20px;
-            width: 100%;
+            margin-left: 250px; 
+            padding: 40px;
+            width: calc(100% - 250px);
         }
 
-        /* Canvas for dots.js */
+        /* 2. BIGGER BUTTONS GRID */
+        .game-container {
+            display: grid;
+            /* Increased min-width from 220px to 280px for BIGGER buttons */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; 
+            padding-top: 20px;
+        }
+
+        /* 3. BUTTON STYLING & ANIMATION */
+        .game-btn {
+            width: 100%;
+            height: 100px; /* Taller buttons */
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px; /* Larger Text */
+            font-weight: bold;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #444; 
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            
+            /* The Smooth Animation Setup */
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* HOVER ANIMATION (Glow & Scale Up) */
+        .game-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 
+                        0 0 15px var(--hover-color, #ffffff); /* Fallback white if no theme */
+            border-color: white !important;
+            color: white !important;
+            background: rgba(20,20,20,0.9);
+        }
+
+        /* CLICK ANIMATION (Press Down) */
+        .game-btn:active {
+            transform: translateY(2px) scale(0.98); /* Shrinks slightly */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* Background Canvas */
         canvas {
             position: fixed;
             top: 0;
@@ -50,30 +108,22 @@
             height: 100%;
         }
         
-        /* Grid Layout for "Spaced Out Big Buttons" */
-        .game-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Bigger buttons */
-            gap: 25px; /* Spaced out */
+        /* Search Bar Styling */
+        #searchBar {
+            width: 80%;
             padding: 20px;
-        }
-
-        .game-btn {
-            width: 100%;
-            padding: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            background: rgba(0,0,0,0.7);
-            border: 2px solid #333; /* Will be colored by JS */
+            font-size: 18px;
+            border-radius: 50px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #333;
             color: white;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Orbitron';
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
         }
-
-        .game-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        #searchBar:focus {
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
         }
     </style>
 </head>
@@ -88,19 +138,18 @@
     <canvas id="dotsCanvas"></canvas>
 
     <div class="sidebar" id="mySidebar">
-        <h2 style="text-align:center; margin-bottom: 30px; letter-spacing: 2px;">SPECTRUM</h2>
+        <h2 style="text-align:center; margin-bottom: 40px; letter-spacing: 3px; font-size: 24px;">SPECTRUM</h2>
         <a href="home.html">Home</a>
-        <a href="games.html" style="color: white; font-weight: bold;">Games</a>
+        <a href="games.html" style="color: white; border-left: 4px solid white; background: rgba(255,255,255,0.05);">Games</a>
         <a href="chat.html">Chat</a>
         <a href="settings.html">Settings</a>
     </div>
 
     <div class="main-content">
-        <h1 style="text-align: center; margin-top: 20px; font-size: 3rem;">GAMES</h1>
+        <h1 style="text-align: center; margin-bottom: 30px; font-size: 3.5rem; text-shadow: 0 0 10px rgba(0,0,0,0.5);">LIBRARY</h1>
         
-        <div style="text-align: center; margin-bottom: 40px;">
-            <input type="text" id="searchBar" onkeyup="searchGames()" placeholder="Search library..." 
-            style="padding: 15px; width: 60%; border-radius: 30px; border: 2px solid #333; background: #111; color: white; font-family: 'Orbitron'; text-align: center;">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <input type="text" id="searchBar" onkeyup="searchGames()" placeholder="SEARCH GAMES...">
         </div>
 
         <div class="game-container" id="gameList">
@@ -546,34 +595,36 @@
             }
         }
 
-        // --- THEME COLOR APPLICATION (Assuming user has a saved theme) ---
-        // This makes sure your buttons and sidebar get the color even with external CSS
+        // --- THEME COLOR APPLICATION ---
+        // This makes sure your sidebar, search bar, and button glows all match the theme
         window.onload = function() {
             var savedTheme = localStorage.getItem('siteTheme');
             if(savedTheme) {
-                // Apply to search bar border
+                // Set CSS Variable for Hover Glow
+                document.documentElement.style.setProperty('--hover-color', savedTheme);
+
+                // Apply to search bar
                 var search = document.getElementById("searchBar");
                 if(search) search.style.borderColor = savedTheme;
 
-                // Apply to Sidebar border
+                // Apply to Sidebar
                 var sidebar = document.getElementById("mySidebar");
-                if(sidebar) sidebar.style.borderRightColor = savedTheme;
+                if(sidebar) {
+                    sidebar.style.borderRightColor = savedTheme;
+                    // Apply to the specific "Games" link to show it's active
+                    var links = sidebar.getElementsByTagName("a");
+                    for(var j=0; j<links.length; j++) {
+                        if(links[j].href.includes("games.html")) {
+                            links[j].style.color = savedTheme;
+                            links[j].style.borderLeftColor = savedTheme;
+                        }
+                    }
+                }
 
-                // Apply to all Game Buttons
+                // Apply to Game Buttons (Border only, let the CSS handle hover)
                 var btns = document.getElementsByClassName("game-btn");
                 for(var i=0; i<btns.length; i++) {
                     btns[i].style.borderColor = savedTheme;
-                    btns[i].style.color = savedTheme;
-                    
-                    // Add hover effect listener
-                    btns[i].addEventListener('mouseover', function(e) {
-                        this.style.backgroundColor = savedTheme;
-                        this.style.color = "#000"; // Black text on hover
-                    });
-                    btns[i].addEventListener('mouseout', function(e) {
-                        this.style.backgroundColor = "rgba(0,0,0,0.7)";
-                        this.style.color = savedTheme;
-                    });
                 }
             }
         };
