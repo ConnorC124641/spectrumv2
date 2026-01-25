@@ -3,173 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectrum - Games</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
-    <style>
-        /* --- LAYOUT OVERRIDES (To ensure Old Sidebar & Big Buttons work) --- */
-        body { 
-            display: flex; 
-            margin: 0; 
-            background-color: #050505; 
-            color: white; 
-            font-family: 'Orbitron', sans-serif; 
-            overflow-x: hidden;
-        }
-        
-        /* 1. OLD SIDEBAR STYLE */
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            padding-top: 20px;
-            border-right: 3px solid #333; /* Color will be injected by JS */
-            z-index: 100;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.5);
-        }
-        .sidebar a {
-            padding: 20px 25px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .sidebar a:hover { 
-            color: #f1f1f1; 
-            background: rgba(255,255,255,0.05);
-            padding-left: 35px; /* Slide effect */
-        }
-
-        /* Content Area shift */
-        .main-content {
-            margin-left: 250px; 
-            padding: 40px;
-            width: calc(100% - 250px);
-        }
-
-        /* 2. BIGGER BUTTONS GRID */
-        .game-container {
-            display: grid;
-            /* Increased min-width from 220px to 280px for BIGGER buttons */
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 30px; 
-            padding-top: 20px;
-        }
-/* 3. BUTTON STYLING & FILL ANIMATION */
-.game-btn {
-    width: 100%;
-    height: 100px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 18px;
-    font-weight: bold;
-    background: rgba(0,0,0,0.8);
-    border: 2px solid #444; 
-    color: white;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    position: relative; /* Required for the fill layer */
-    overflow: hidden;   /* Keeps the fill inside the rounded corners */
-    z-index: 1;         /* Ensures text stays on top */
-}
-
-/* The "Fill" Layer */
-.game-btn::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    /* This creates a mix of the theme color and a secondary dark shade */
-    background: radial-gradient(circle, var(--hover-color, #ffffff) 0%, #000 100%);
-    opacity: 0;
-    transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
-    transform: translate(-50%, -50%);
-    z-index: -1; /* Places the color behind the text */
-}
-
-/* HOVER - Just the glow */
-.game-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--hover-color, #ffffff);
-}
-
-/* THE PRESS ANIMATION - Fills the button */
-.game-btn:active::after {
-    width: 150%; /* Larger than button to ensure full coverage */
-    height: 400%; 
-    opacity: 0.8;
-    transition: 0s; /* Makes the "hit" feel instant */
-}
-
-.game-btn:active {
-    transform: scale(0.96);
-    color: #000; /* Optional: makes text black so it's readable against the bright fill */
-}
-
-        /* Background Canvas */
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* Search Bar Styling */
-        #searchBar {
-            width: 80%;
-            padding: 20px;
-            font-size: 18px;
-            border-radius: 50px;
-            background: rgba(0,0,0,0.8);
-            border: 2px solid #333;
-            color: white;
-            font-family: 'Orbitron';
-            text-align: center;
-            outline: none;
-            transition: 0.3s;
-        }
-        #searchBar:focus {
-            box-shadow: 0 0 20px rgba(255,255,255,0.1);
-        }
-    </style>
+    <title>Spectrum Games</title>
+    <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
-    <script>
-        if (document.cookie.indexOf("spectrum_access=true") === -1) {
-            window.location.href = "index.html";
-        }
-    </script>
-
-    <canvas id="dotsCanvas"></canvas>
-
- <div class="sidebar">
+    <div class="sidebar">
         <h1>SPECTRUM</h1>
-        <a href="home.html" class="nav-btn pink" style="color: white; border-left: 3px solid var(--primary);">HOME</a>
+        <a href="index.html" class="nav-btn pink">HOME</a>
         <a href="games.html" class="nav-btn blue">GAMES</a>
         <a href="settings.html" class="nav-btn pink">SETTINGS</a>
-        <a href="chat.html" class="nav-btn pink">CHAT</a>
     </div>
 
     <div class="main-content">
-        <h1 style="text-align: center; margin-bottom: 30px; font-size: 3.5rem; text-shadow: 0 0 10px rgba(0,0,0,0.5);">LIBRARY</h1>
         
-        <div style="text-align: center; margin-bottom: 50px;">
-            <input type="text" id="searchBar" onkeyup="searchGames()" placeholder="SEARCH GAMES...">
-        </div>
+        <input type="text" id="searchBar" placeholder="Search Spectrum..." onkeyup="filterGames()">
 
-        <div class="game-container" id="gameList">
+        <div class="games-grid" id="gameList">
             <a href="cl1.html"><button class="game-btn">1</button></a>
             <a href="cl10bullets.html"><button class="game-btn">10 Bullets</button></a>
             <a href="cl10minutestildawn.html"><button class="game-btn">10 Minutes Til Dawn</button></a>
@@ -586,66 +436,45 @@
             <a href="clgunmayhemredux.html"><button class="game-btn">Gun Mayhem Redux</button></a>
             <a href="clgun-spin.html"><button class="game-btn">Gun Spin</button></a>
             <a href="clgymstack.html"><button class="game-btn">Gym Stack</button></a>
-
             <a href="clhacx.html"><button class="game-btn">Hacx</button></a>
             <a href="clhandsofwar.html"><button class="game-btn">Hands of War</button></a>
+
+
+
         </div>
     </div>
 
     <script src="dots.js"></script>
 
     <script>
-        // --- SEARCH ---
-        function searchGames() {
-            var input = document.getElementById("searchBar");
+        function filterGames() {
+            var input = document.getElementById('searchBar');
             var filter = input.value.toUpperCase();
-            var container = document.getElementById("gameList");
-            var buttons = container.getElementsByTagName("a");
+            var grid = document.getElementById("gameList");
+            var a = grid.getElementsByTagName('a');
 
-            for (var i = 0; i < buttons.length; i++) {
-                var txtValue = buttons[i].textContent || buttons[i].innerText;
+            for (var i = 0; i < a.length; i++) {
+                var btn = a[i].getElementsByTagName("button")[0];
+                var txtValue = btn.textContent || btn.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    buttons[i].style.display = "";
+                    a[i].style.display = "";
                 } else {
-                    buttons[i].style.display = "none";
+                    a[i].style.display = "none";
                 }
             }
         }
-
-        // --- THEME COLOR APPLICATION ---
-        // This makes sure your sidebar, search bar, and button glows all match the theme
-        window.onload = function() {
-            var savedTheme = localStorage.getItem('siteTheme');
-            if(savedTheme) {
-                // Set CSS Variable for Hover Glow
-                document.documentElement.style.setProperty('--hover-color', savedTheme);
-
-                // Apply to search bar
-                var search = document.getElementById("searchBar");
-                if(search) search.style.borderColor = savedTheme;
-
-                // Apply to Sidebar
-                var sidebar = document.getElementById("mySidebar");
-                if(sidebar) {
-                    sidebar.style.borderRightColor = savedTheme;
-                    // Apply to the specific "Games" link to show it's active
-                    var links = sidebar.getElementsByTagName("a");
-                    for(var j=0; j<links.length; j++) {
-                        if(links[j].href.includes("games.html")) {
-                            links[j].style.color = savedTheme;
-                            links[j].style.borderLeftColor = savedTheme;
-                        }
-                    }
-                }
-
-                // Apply to Game Buttons (Border only, let the CSS handle hover)
-                var btns = document.getElementsByClassName("game-btn");
-                for(var i=0; i<btns.length; i++) {
-                    btns[i].style.borderColor = savedTheme;
-                }
-            }
-        };
     </script>
 
+    <script>
+        if (localStorage.getItem('spectrumTitle')) {
+            document.title = localStorage.getItem('spectrumTitle');
+        }
+        if (localStorage.getItem('primaryColor')) {
+            document.documentElement.style.setProperty('--primary', localStorage.getItem('primaryColor'));
+        }
+        if (localStorage.getItem('secondaryColor')) {
+            document.documentElement.style.setProperty('--secondary', localStorage.getItem('secondaryColor'));
+        }
+    </script>
 </body>
 </html>
