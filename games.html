@@ -62,41 +62,58 @@
             gap: 30px; 
             padding-top: 20px;
         }
+/* 3. BUTTON STYLING & FILL ANIMATION */
+.game-btn {
+    width: 100%;
+    height: 100px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid #444; 
+    color: white;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative; /* Required for the fill layer */
+    overflow: hidden;   /* Keeps the fill inside the rounded corners */
+    z-index: 1;         /* Ensures text stays on top */
+}
 
-        /* 3. BUTTON STYLING & ANIMATION */
-        .game-btn {
-            width: 100%;
-            height: 100px; /* Taller buttons */
-            font-family: 'Orbitron', sans-serif;
-            font-size: 18px; /* Larger Text */
-            font-weight: bold;
-            background: rgba(0,0,0,0.8);
-            border: 2px solid #444; 
-            color: white;
-            cursor: pointer;
-            border-radius: 12px;
-            
-            /* The Smooth Animation Setup */
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
-        }
+/* The "Fill" Layer */
+.game-btn::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    /* This creates a mix of the theme color and a secondary dark shade */
+    background: radial-gradient(circle, var(--hover-color, #ffffff) 0%, #000 100%);
+    opacity: 0;
+    transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Places the color behind the text */
+}
 
-        /* HOVER ANIMATION (Glow & Scale Up) */
-        .game-btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 
-                        0 0 15px var(--hover-color, #ffffff); /* Fallback white if no theme */
-            border-color: white !important;
-            color: white !important;
-            background: rgba(20,20,20,0.9);
-        }
+/* HOVER - Just the glow */
+.game-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--hover-color, #ffffff);
+}
 
-        /* CLICK ANIMATION (Press Down) */
-        .game-btn:active {
-            transform: translateY(2px) scale(0.98); /* Shrinks slightly */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
+/* THE PRESS ANIMATION - Fills the button */
+.game-btn:active::after {
+    width: 150%; /* Larger than button to ensure full coverage */
+    height: 400%; 
+    opacity: 0.8;
+    transition: 0s; /* Makes the "hit" feel instant */
+}
+
+.game-btn:active {
+    transform: scale(0.96);
+    color: #000; /* Optional: makes text black so it's readable against the bright fill */
+}
 
         /* Background Canvas */
         canvas {
@@ -137,12 +154,12 @@
 
     <canvas id="dotsCanvas"></canvas>
 
-    <div class="sidebar" id="mySidebar">
-        <h2 style="text-align:center; margin-bottom: 40px; letter-spacing: 3px; font-size: 24px;">SPECTRUM</h2>
-        <a href="home.html">Home</a>
-        <a href="games.html" style="color: white; border-left: 4px solid white; background: rgba(255,255,255,0.05);">Games</a>
-        <a href="chat.html">Chat</a>
-        <a href="settings.html">Settings</a>
+ <div class="sidebar">
+        <h1>SPECTRUM</h1>
+        <a href="home.html" class="nav-btn pink" style="color: white; border-left: 3px solid var(--primary);">HOME</a>
+        <a href="games.html" class="nav-btn blue">GAMES</a>
+        <a href="settings.html" class="nav-btn pink">SETTINGS</a>
+        <a href="chat.html" class="nav-btn pink">CHAT</a>
     </div>
 
     <div class="main-content">
