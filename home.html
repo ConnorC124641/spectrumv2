@@ -7,41 +7,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spectrum - Home</title>
     <script>
-    // This script checks the server.json file every time someone visits the home page
     async function checkLockdown() {
+        const user = "ConnorC124641";
+        const repo = "spectrum";
+        // This URL points to the RAW text file on GitHub
+        const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}`;
+
         try {
-            // We add Date.now() to the URL to bypass the cache and get the newest version
-            const user = "ConnorC124641";
-            const repo = "spectrum";
-            const response = await fetch(`https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}`);
+            const response = await fetch(url);
             
-            if (!response.ok) return; // If file isn't found, do nothing
+            if (!response.ok) {
+                alert("DEBUG ERROR: Could not find server.json! Check your Repo Name.");
+                return;
+            }
 
             const data = await response.json();
+            
+            // DEBUG: Tell us what the file says
+            console.log("Server Status:", data);
 
-            // If the file says locked is true, wipe the page and show the lock screen
             if (data.locked === true) {
                 document.body.innerHTML = `
-                    <div style="height:100vh; background:#000; color:#bc13fe; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:sans-serif; text-align:center;">
-                        <h1 style="font-size:50px; text-shadow: 0 0 20px #bc13fe;">🚫 ACCESS DENIED</h1>
-                        <p style="color:white; font-size:20px;">${data.shutdown_message || "Site is under maintenance."}</p>
-                        <div style="margin-top:20px; border: 1px solid #bc13fe; padding:10px; color:#bc13fe;">Admin System v1.0</div>
+                    <div style="height:100vh; background:black; color:red; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                        <h1>🚫 LOCKED 🚫</h1>
+                        <p>${data.shutdown_message}</p>
                     </div>
                 `;
-                document.body.style.background = "black";
+            } else {
+                // If this alerts, it means the file was found but 'locked' is false
+                // alert("DEBUG: File found, but site is UNLOCKED."); 
             }
+
         } catch (error) {
-            console.log("Status check failed. Proceeding normally.");
+            alert("DEBUG ERROR: " + error.message);
         }
     }
-
-    // Run the check immediately
+    
     checkLockdown();
-</script>
-   <script>
-    if (document.cookie.indexOf("spectrum_access=true") === -1) {
-        window.location.href = "index.html";
-    }
 </script>
 
     <link rel="stylesheet" href="styles.css?v=6">
