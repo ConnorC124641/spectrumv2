@@ -1,36 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body style="display: flex; height: 100vh; margin: 0; background-color: #121212;">
 
-    <link rel="stylesheet" href="styles.css?v=10">
-<div style="display: flex; min-height: 80vh; gap: 20px; padding: 20px;">
-
- <div class="sidebar">
-        <h1 style="font-size: 1.5rem; letter-spacing: 2px;">SPECTRUM</h1>
-        <a href="home.html" class="nav-btn pink">HOME</a>
-        <a href="games.html" class="nav-btn blue">GAMES</a>
-        <a href="chat.html" class="nav-btn pink" style="color: white; border-left: 3px solid #ff00ff;">CHAT</a>
-        <a href="settings.html" class="nav-btn blue">SETTINGS</a>
+    <div class="sidebar">
+        <h2 style="color: #bc13fe; text-align: center;">SPECTRUM</h2>
+        <nav style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="index.html"><button class="game-btn">🏠 Home</button></a>
+            <a href="games.html"><button class="game-btn">🎮 Games</button></a>
+            <a href="chatcode.html"><button class="game-btn">💬 Chat</button></a>
+            <a href="os.html"><button class="game-btn">💻 OS</button></a>
+            <a href="settings.html"><button class="game-btn">⚙️ Settings</button></a>
+        </nav>
     </div>
 
+    <div style="flex-grow: 1; padding: 20px; color: white; display: flex; justify-content: center;">
+        
+        <div class="game-container" style="width: 100%; max-width: 600px; display: flex; flex-direction: column;">
+            <h2 style="text-align: center; margin-top: 0;">P2P Chat</h2>
+            
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 15px;">
+                <p>My ID: <strong id="my-id" style="color: #bc13fe;">Loading...</strong></p>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="friend-id" placeholder="Friend's ID" style="flex-grow: 1; padding: 8px;">
+                    <button class="game-btn" onclick="connectToFriend()">Connect</button>
+                </div>
+            </div>
 
-    <div style="flex-grow: 1; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
-        <h2 style="color: white; margin-top: 0;">Global Chat</h2>
-        
-        <div class="giscus"></div>
-        
-        <script src="https://giscus.app/client.js"
-                data-repo="ConnorC124641/spectrum"
-                data-repo-id="R_kgDOQ_aqAA"
-                data-category="General"
-                data-category-id="DIC_kwDOQ_aqAM4C1n3r"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="purple_dark"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-        </script>
+            <div id="chat-box" style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <div style="color: #777;">System: Ready to connect...</div>
+            </div>
+
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="msg-input" placeholder="Type message..." style="flex-grow: 1; padding: 8px;">
+                <button class="game-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
     </div>
 
-</div>
+    <script>
+        const peer = new Peer();
+        let conn;
+
+        // Display my ID
+        peer.on('open', (id) => {
+            document.getElementById('my-id').innerText = id;
+        });
+
+        // Listen for incoming connection
+        peer.on('connection', (c) => {
+            conn = c;
+            setupConnection();
+        });
+
+        // Connect to friend
+        function connectToFriend() {
+            const friendId = document.getElementById('friend-id').value;
+            if (friendId) {
+                conn = peer.connect(friendId);
+                setupConnection();
+            }
+        }
+
+        // Setup chat logic
+        function setupConnection() {
+            conn.on('open', () => {
+                addToChat('System', 'Connected!');
+                
+                // Receive messages
+                conn.on('data', (data) => {
+                    addToChat('Friend', data);
+                });
+            });
+        }
+
+        // Send message
+        function sendMessage() {
+            const msg = document.getElementById('msg-input').value;
+            if (msg && conn) {
+                conn.send(msg);
+                addToChat('Me', msg);
+                document.getElementById('msg-input').value = '';
+            }
+        }
+
+        // Add to chat box
+        function addToChat(user, text) {
+            const box = document.getElementById('chat-box');
+            let color = '#ccc';
+            if (user === 'Me') color = '#bc13fe';
+            if (user === 'Friend') color = '#00d4ff';
+            
+            box.innerHTML += `<div><strong style="color: ${color}">${user}:</strong> ${text}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
+</body>
+</html>
