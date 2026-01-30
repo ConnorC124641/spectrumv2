@@ -4,37 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spectrum Chat</title>
+    
     <link rel="stylesheet" href="style.css">
+    
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
-<body style="display: flex; height: 100vh; margin: 0; background-color: #121212;">
-<div class="sidebar">
-        <h1 style="font-size: 1.5rem; letter-spacing: 2px;">SPECTRUM</h1>
-        <a href="home.html" class="nav-btn pink">HOME</a>
-        <a href="games.html" class="nav-btn blue">GAMES</a>
-        <a href="chat.html" class="nav-btn pink" style="color: white; border-left: 3px solid #ff00ff;">CHAT</a>
-        <a href="settings.html" class="nav-btn blue">SETTINGS</a>
+<body style="display: flex; height: 100vh; margin: 0; background-color: #121212; font-family: sans-serif; overflow: hidden;">
+
+    <div class="sidebar">
+        <h1 style="color: #bc13fe; text-align: center;">SPECTRUM</h1>
+            <a href="index.html"><button class="nav-btn blue">🏠 Home</button></a>
+            <a href="games.html"><button class="nav-btn pink">🎮 Games</button></a>
+            <a href="chatcode.html"><button class="nav-btn blue">💬 Chat</button></a>
+            <a href="os.html"><button class="nav-btn pink">💻 OS</button></a>
+            <a href="settings.html"><button class="nav-btn blue">⚙️ Settings</button></a>
+        </nav>
     </div>
 
-    <div style="flex-grow: 1; padding: 20px; color: white; display: flex; justify-content: center;">
+    <div style="flex-grow: 1; padding: 20px; color: white; display: flex; justify-content: center; align-items: flex-start;">
         
-        <div class="game-container" style="width: 100%; max-width: 600px; display: flex; flex-direction: column;">
+        <div class="game-container" style="width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 10px;">
             <h2 style="text-align: center; margin-top: 0;">P2P Chat</h2>
             
-            <div style="margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 15px;">
-                <p>My ID: <strong id="my-id" style="color: #bc13fe;">Loading...</strong></p>
-                <div style="display: flex; gap: 5px;">
-                    <input type="text" id="friend-id" placeholder="Friend's ID" style="flex-grow: 1; padding: 8px;">
+            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; border-bottom: 2px solid #bc13fe;">
+                <p style="margin-top: 0;">My ID: <strong id="my-id" style="color: #bc13fe;">Generating...</strong></p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="friend-id" placeholder="Paste Friend's ID" style="flex-grow: 1; padding: 10px; border-radius: 5px; border: none;">
+                    
                     <button class="game-btn" onclick="connectToFriend()">Connect</button>
                 </div>
             </div>
 
-            <div id="chat-box" style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-                <div style="color: #777;">System: Ready to connect...</div>
+            <div id="chat-box" style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 5px; border: 1px solid #444;">
+                <div style="color: #777; font-style: italic;">System: Ready to chat...</div>
             </div>
 
-            <div style="display: flex; gap: 5px;">
-                <input type="text" id="msg-input" placeholder="Type message..." style="flex-grow: 1; padding: 8px;">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="msg-input" placeholder="Type a message..." style="flex-grow: 1; padding: 10px; border-radius: 5px; border: none;">
+                
                 <button class="game-btn" onclick="sendMessage()">Send</button>
             </div>
         </div>
@@ -61,6 +69,8 @@
             if (friendId) {
                 conn = peer.connect(friendId);
                 setupConnection();
+            } else {
+                alert("Please enter a Friend ID first.");
             }
         }
 
@@ -83,6 +93,8 @@
                 conn.send(msg);
                 addToChat('Me', msg);
                 document.getElementById('msg-input').value = '';
+            } else if (!conn) {
+                alert("You need to connect to a friend first!");
             }
         }
 
@@ -93,7 +105,7 @@
             if (user === 'Me') color = '#bc13fe';
             if (user === 'Friend') color = '#00d4ff';
             
-            box.innerHTML += `<div><strong style="color: ${color}">${user}:</strong> ${text}</div>`;
+            box.innerHTML += `<div style="margin-bottom: 5px;"><strong style="color: ${color}">${user}:</strong> ${text}</div>`;
             box.scrollTop = box.scrollHeight;
         }
     </script>
