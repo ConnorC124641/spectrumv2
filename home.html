@@ -8,38 +8,77 @@
     <title>Spectrum - Home</title>
     <script>
     async function checkLockdown() {
+        // Your GitHub Info
         const user = "ConnorC124641";
         const repo = "spectrum";
-        // This URL points to the RAW text file on GitHub
+        
+        // Add timestamp to ensure we get the latest file version
         const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}`;
 
         try {
             const response = await fetch(url);
-            
-            if (!response.ok) {
-                alert("DEBUG ERROR: Could not find server.json! Check your Repo Name.");
-                return;
-            }
+            if (!response.ok) return; // If file error, keep site normal
 
             const data = await response.json();
-            
-            // DEBUG: Tell us what the file says
-            console.log("Server Status:", data);
 
+            // If locked is true, replace the whole page
             if (data.locked === true) {
+                
+                // 1. Force the body to have no margins and be black
+                document.body.style.margin = "0";
+                document.body.style.padding = "0";
+                document.body.style.backgroundColor = "black";
+                document.body.style.height = "100vh";
+                document.body.style.overflow = "hidden"; // Stop scrolling
+
+                // 2. Inject the Lock Screen HTML
                 document.body.innerHTML = `
-                    <div style="height:100vh; background:black; color:red; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <h1>🚫 LOCKED 🚫</h1>
-                        <p>${data.shutdown_message}</p>
+                    <div style="
+                        display: flex; 
+                        flex-direction: column; 
+                        justify-content: center; 
+                        align-items: center; 
+                        height: 100vh; 
+                        width: 100vw; 
+                        background-color: #000; 
+                        color: #ff0000; 
+                        font-family: sans-serif; 
+                        text-align: center;
+                    ">
+                        <h1 style="
+                            font-size: 60px; 
+                            margin: 0 0 20px 0; 
+                            text-transform: uppercase; 
+                            text-shadow: 0 0 20px red;
+                            letter-spacing: 5px;
+                        ">
+                            🚫 ACCESS DENIED
+                        </h1>
+                        
+                        <p style="
+                            color: white; 
+                            font-size: 24px; 
+                            max-width: 80%; 
+                            line-height: 1.5;
+                        ">
+                            ${data.shutdown_message || "This site is currently locked by the Owner (Connor)."}
+                        </p>
+                        
+                        <div style="
+                            margin-top: 40px; 
+                            border: 1px solid #333; 
+                            padding: 10px 20px; 
+                            color: #555; 
+                            font-size: 12px; 
+                            border-radius: 5px;
+                        ">
+                            SPECTRUM SECURITY SYSTEM
+                        </div>
                     </div>
                 `;
-            } else {
-                // If this alerts, it means the file was found but 'locked' is false
-                // alert("DEBUG: File found, but site is UNLOCKED."); 
             }
-
         } catch (error) {
-            alert("DEBUG ERROR: " + error.message);
+            console.log("Allowed.");
         }
     }
     
