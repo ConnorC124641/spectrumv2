@@ -3,9 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectrum Chat</title>
+    <title>Spectrum Chat & Admin</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+    <style>
+        /* Special Styling for Admin Buttons */
+        .admin-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            font-size: 12px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        
+        .btn-lock { background: #800000; border: 1px solid #ff4444; }
+        .btn-lock:hover { background: #aa0000; box-shadow: 0 0 10px #ff0000; }
+
+        .btn-unlock { background: #006400; border: 1px solid #00ff00; }
+        .btn-unlock:hover { background: #008000; box-shadow: 0 0 10px #00ff00; }
+
+        .btn-set { background: #4b0082; border: 1px solid #bc13fe; }
+        .btn-set:hover { background: #6a0dad; box-shadow: 0 0 10px #bc13fe; }
+
+        /* Input Styling */
+        .admin-input {
+            background: #111;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            outline: none;
+        }
+        .admin-input:focus { border-color: #bc13fe; }
+    </style>
 </head>
 <body style="display: flex; height: 100vh; margin: 0; background-color: #121212; font-family: sans-serif; overflow: hidden;">
 
@@ -43,23 +79,23 @@
             </div>
         </div>
 
-        <div class="game-container" style="width: 100%; max-width: 600px; border: 2px dashed #bc13fe; background: rgba(20, 0, 20, 0.8);">
-            <h3 style="color: #bc13fe; margin-top: 0; text-align: center;">⚠️ ADMIN PANEL ⚠️</h3>
+        <div class="game-container" style="width: 100%; max-width: 600px; border: 2px dashed #bc13fe; background: rgba(20, 0, 20, 0.85); border-radius: 10px;">
+            <h3 style="color: #bc13fe; margin-top: 0; text-align: center; text-shadow: 0 0 10px #bc13fe;">⚠️ ADMIN PANEL ⚠️</h3>
             
-            <p style="font-size: 12px; color: #aaa;">Paste your GitHub Token below to enable controls:</p>
-            <input type="password" id="gh-token" placeholder="Paste GitHub Token Here" style="width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box; border-radius: 5px; border: none;">
+            <p style="font-size: 12px; color: #aaa; margin-bottom: 5px;">GitHub Token:</p>
+            <input type="password" id="gh-token" class="admin-input" placeholder="Paste Token Here" style="width: 100%; margin-bottom: 15px; box-sizing: border-box;">
 
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="game-btn" style="flex: 1; background: #800000;" onclick="updateServer(true)">🔒 LOCK SITE</button>
-                <button class="game-btn" style="flex: 1; background: #006400;" onclick="updateServer(false)">🔓 UNLOCK SITE</button>
+                <button class="admin-btn btn-lock" style="flex: 1;" onclick="updateServer(true)">🔒 LOCK SITE</button>
+                <button class="admin-btn btn-unlock" style="flex: 1;" onclick="updateServer(false)">🔓 UNLOCK SITE</button>
             </div>
 
             <div style="display: flex; gap: 10px; align-items: center;">
-                <input type="number" id="admin-time" placeholder="Mins" style="width: 80px; padding: 10px; border-radius: 5px; border: none;">
-                <button class="game-btn" style="flex: 1;" onclick="updateTime()">Set Global Timer</button>
+                <input type="number" id="admin-time" class="admin-input" placeholder="Mins" style="width: 80px;">
+                <button class="admin-btn btn-set" style="flex: 1;" onclick="updateTime()">Set Global Timer</button>
             </div>
             
-            <p id="admin-status" style="text-align: center; color: yellow; margin-top: 10px; font-weight: bold;"></p>
+            <p id="admin-status" style="text-align: center; color: yellow; margin-top: 10px; font-weight: bold; min-height: 20px;"></p>
         </div>
 
     </div>
@@ -102,21 +138,27 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        // --- ADMIN LOGIC (GitHub API) ---
+        // --- ADMIN LOGIC ---
         async function updateServer(lockStatus, timeVal = null) {
             const token = document.getElementById('gh-token').value;
             const statusLabel = document.getElementById('admin-status');
 
-            if (!token) { alert("Please paste your GitHub Token!"); return; }
+            if (!token) { 
+                statusLabel.innerText = "❌ Please paste your GitHub Token!";
+                statusLabel.style.color = "red";
+                return; 
+            }
+            
             statusLabel.innerText = "Connecting to GitHub...";
+            statusLabel.style.color = "yellow";
 
-            // REPLACE THESE WITH YOUR EXACT GITHUB INFO
+            // YOUR GITHUB INFO
             const user = "ConnorC124641";
             const repo = "spectrum";
             const url = `https://api.github.com/repos/${user}/${repo}/contents/server.json`;
 
             try {
-                // 1. Get current file (We need the SHA to update it)
+                // 1. Get current file (need SHA)
                 const getReq = await fetch(url, { headers: { "Authorization": `token ${token}` } });
                 
                 if (!getReq.ok) throw new Error("Token invalid or file not found");
@@ -126,13 +168,13 @@
 
                 // 2. Prepare new content
                 const newContent = {
-                    locked: lockStatus !== null ? lockStatus : currentContent.locked, // Use new lock status OR keep old one
+                    locked: lockStatus !== null ? lockStatus : currentContent.locked,
                     password: currentContent.password,
-                    play_limit_minutes: timeVal !== null ? parseInt(timeVal) : currentContent.play_limit_minutes, // Use new time OR keep old one
+                    play_limit_minutes: timeVal !== null ? parseInt(timeVal) : currentContent.play_limit_minutes,
                     shutdown_message: currentContent.shutdown_message
                 };
 
-                // 3. Send update to GitHub
+                // 3. Send update
                 const putReq = await fetch(url, {
                     method: "PUT",
                     headers: {
@@ -141,26 +183,29 @@
                     },
                     body: JSON.stringify({
                         message: "Admin Panel Update",
-                        content: btoa(JSON.stringify(newContent, null, 2)), // Convert JSON to Base64
-                        sha: fileData.sha // Required by GitHub
+                        content: btoa(JSON.stringify(newContent, null, 2)),
+                        sha: fileData.sha
                     })
                 });
 
                 if (putReq.ok) {
-                    statusLabel.innerText = "✅ Success! Site updated.";
+                    statusLabel.innerText = "✅ Success! Wait 60s for update.";
+                    statusLabel.style.color = "#00ff00";
                 } else {
                     statusLabel.innerText = "❌ Error updating file.";
+                    statusLabel.style.color = "red";
                 }
 
             } catch (err) {
                 console.error(err);
                 statusLabel.innerText = "❌ Connection Failed.";
+                statusLabel.style.color = "red";
             }
         }
 
         function updateTime() {
             const t = document.getElementById('admin-time').value;
-            if(t) updateServer(null, t); // null means "don't change lock status", just change time
+            if(t) updateServer(null, t);
         }
     </script>
 </body>
