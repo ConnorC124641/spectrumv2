@@ -12,6 +12,7 @@
             window.location.href = "index.html";
         }
     </script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 
     <link rel="stylesheet" href="styles.css?v=8">
     <style>
@@ -70,19 +71,94 @@
         <a href="chat.html" class="nav-btn pink" style="color: white; border-left: 3px solid #ff00ff;">CHAT</a>
         <a href="settings.html" class="nav-btn blue">SETTINGS</a>
     </div>
-
-    <div class="main-content">
-        <div class="chat-layout">
-            <div class="chat-header">
-                <h2>GLOBAL CHAT</h2>
-                <p style="font-size: 0.8rem; color: #666;">COMMUNICATION CHANNEL ACTIVE</p>
+ <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <div style="flex-grow: 1; padding: 20px; color: white; display: flex; justify-content: center; align-items: flex-start;">
+        
+        <div class="game-container" style="width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 10px;">
+            <h2 style="text-align: center; margin-top: 0;">P2P Chat</h2>
+            
+            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; border-bottom: 2px solid #bc13fe;">
+                <p style="margin-top: 0;">My ID: <strong id="my-id" style="color: #bc13fe;">Generating...</strong></p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="friend-id" placeholder="Paste Friend's ID" style="flex-grow: 1; padding: 10px; border-radius: 5px; border: none;">
+                    
+                    <button class="game-btn" onclick="connectToFriend()">Connect</button>
+                </div>
             </div>
 
-            <div class="cbox-wrapper">
-                </div>
-               <iframe src="https://www3.cbox.ws/box/?boxid=3551767&boxtag=A7WHfP" width="100%" height="450" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>	
+            <div id="chat-box" style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 5px; border: 1px solid #444;">
+                <div style="color: #777; font-style: italic;">System: Ready to chat...</div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="msg-input" placeholder="Type a message..." style="flex-grow: 1; padding: 10px; border-radius: 5px; border: none;">
+                
+                <button class="game-btn" onclick="sendMessage()">Send</button>
+            </div>
         </div>
     </div>
 
+    <script>
+        const peer = new Peer();
+        let conn;
+
+        // Display my ID
+        peer.on('open', (id) => {
+            document.getElementById('my-id').innerText = id;
+        });
+
+        // Listen for incoming connection
+        peer.on('connection', (c) => {
+            conn = c;
+            setupConnection();
+        });
+
+        // Connect to friend
+        function connectToFriend() {
+            const friendId = document.getElementById('friend-id').value;
+            if (friendId) {
+                conn = peer.connect(friendId);
+                setupConnection();
+            } else {
+                alert("Please enter a Friend ID first.");
+            }
+        }
+
+        // Setup chat logic
+        function setupConnection() {
+            conn.on('open', () => {
+                addToChat('System', 'Connected!');
+                
+                // Receive messages
+                conn.on('data', (data) => {
+                    addToChat('Friend', data);
+                });
+            });
+        }
+
+        // Send message
+        function sendMessage() {
+            const msg = document.getElementById('msg-input').value;
+            if (msg && conn) {
+                conn.send(msg);
+                addToChat('Me', msg);
+                document.getElementById('msg-input').value = '';
+            } else if (!conn) {
+                alert("You need to connect to a friend first!");
+            }
+        }
+
+        // Add to chat box
+        function addToChat(user, text) {
+            const box = document.getElementById('chat-box');
+            let color = '#ccc';
+            if (user === 'Me') color = '#bc13fe';
+            if (user === 'Friend') color = '#00d4ff';
+            
+            box.innerHTML += `<div style="margin-bottom: 5px;"><strong style="color: ${color}">${user}:</strong> ${text}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
 </body>
 </html>
