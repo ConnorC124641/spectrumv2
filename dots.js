@@ -140,39 +140,32 @@ let filterActive = false;
 
 function toggleFavFilter() {
     filterActive = !filterActive;
+    
+    // Get all the data we need upfront (Read phase)
     const filterBtn = document.getElementById('filter-favs');
     const favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
-    
-    // Find all game buttons
     const gameButtons = document.querySelectorAll('.game-btn');
 
-    // Update the UI of the toggle button
+    // Update the button text immediately
     if (filterBtn) {
         filterBtn.innerText = filterActive ? "Show Favorites Only (ON)" : "Show Favorites Only (OFF)";
         filterBtn.classList.toggle('active', filterActive);
     }
 
-    gameButtons.forEach(btn => {
-        const gameName = btn.innerText.trim();
-        
-        // Find the "Card" or "Container" the button is inside of
-        // We look for a <div> or <a> that contains the button
-        const gameContainer = btn.closest('.game-card') || btn.parentElement;
+    // Tell browser to update the games in the next frame (Write phase)
+    requestAnimationFrame(() => {
+        gameButtons.forEach(btn => {
+            const gameName = btn.innerText.trim();
+            // Find the container (card or wrapper)
+            const container = btn.closest('.game-card') || btn.closest('.game-wrapper') || btn.parentElement;
 
-        if (filterActive) {
-            if (!favorites.includes(gameName)) {
-                gameContainer.style.display = 'none'; // Hide non-favorites
+            // If Filter is ON and game is NOT in favorites -> Hide it
+            if (filterActive && !favorites.includes(gameName)) {
+                container.classList.add('hidden-game');
             } else {
-                gameContainer.style.display = 'block'; // Show favorites
+                // Otherwise show it
+                container.classList.remove('hidden-game');
             }
-        } else {
-            // If filter is OFF, show everything
-            gameContainer.style.display = 'block';
-        }
+        });
     });
 }
-
-// This tells the browser: "Wait until EVERYTHING is loaded, then wait 1 second"
-window.addEventListener('load', () => {
-    setTimeout(setupFavorites, 1000);
-});
