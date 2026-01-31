@@ -1,6 +1,6 @@
 {
   "locked": false,
   "password": "spectrum123",
-  "play_limit_minutes": 1,
+  "play_limit_minutes": 30,
   "shutdown_message": "Admin has locked the site."
 }
