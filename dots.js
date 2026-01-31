@@ -93,75 +93,52 @@ function animate() {
 }
 
 animate();
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+// Add this at the very bottom of dots.js
+function setupFavorites() {
+    // 1. Find all game buttons
     const gameButtons = document.querySelectorAll('.game-btn');
     const favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
 
-    gameButtons.forEach(btn => {
-        const gameName = btn.innerText.trim();
-        const container = btn.parentElement; // Usually the <a> or <div>
+    // If no buttons are found, wait and try one more time
+    if (gameButtons.length === 0) {
+        console.log("No game buttons found yet, retrying...");
+        return;
+    }
 
-        // Create Favorite Button
+    gameButtons.forEach(btn => {
+        // Stop if we already added a favorite button here
+        if (btn.nextElementSibling && btn.nextElementSibling.classList.contains('fav-btn')) return;
+
+        const gameName = btn.innerText.trim();
+        
+        // 2. Create Favorite Button
         const favBtn = document.createElement('button');
         favBtn.className = "fav-btn";
         
-        // Check if already favorited to set the star
-        updateFavBtnStyle(favBtn, favorites.includes(gameName));
+        // Check if it's already a favorite
+        const isFav = favorites.includes(gameName);
+        favBtn.innerHTML = isFav ? "⭐ Favorited" : "☆ Favorite";
 
+        // 3. Simple click logic
         favBtn.onclick = (e) => {
             e.preventDefault();
-            handleFavClick(gameName, favBtn);
+            let currentFavs = JSON.parse(localStorage.getItem('myFavorites')) || [];
+            if (currentFavs.includes(gameName)) {
+                currentFavs = currentFavs.filter(f => f !== gameName);
+                favBtn.innerHTML = "☆ Favorite";
+            } else {
+                currentFavs.push(gameName);
+                favBtn.innerHTML = "⭐ Favorited";
+            }
+            localStorage.setItem('myFavorites', JSON.stringify(currentFavs));
         };
 
-        // Insert it right after the game button
-        btn.insertAdjacentElement('afterend', favBtn);
+        // 4. Put it after the button
+        btn.after(favBtn);
     });
+}
+
+// This tells the browser: "Wait until EVERYTHING is loaded, then wait 1 second"
+window.addEventListener('load', () => {
+    setTimeout(setupFavorites, 1000);
 });
-
-// 2. HANDLE CLICKS: Save/Remove from LocalStorage
-function handleFavClick(name, btn) {
-    let favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
-    let isAdded;
-
-    if (favorites.includes(name)) {
-        favorites = favorites.filter(f => f !== name);
-        isAdded = false;
-    } else {
-        favorites.push(name);
-        isAdded = true;
-    }
-
-    localStorage.setItem('myFavorites', JSON.stringify(favorites));
-    updateFavBtnStyle(btn, isAdded);
-}
-
-function updateFavBtnStyle(btn, isFav) {
-    btn.innerHTML = isFav ? "⭐ Favorited" : "☆ Favorite";
-    btn.style.borderColor = isFav ? "#ffd700" : "#555";
-}
-
-// 3. FILTER LOGIC: Show/Hide games
-let filterActive = false;
-
-function toggleFavFilter() {
-    filterActive = !filterActive;
-    const filterBtn = document.getElementById('filter-favs');
-    const favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
-    const allGameCards = document.querySelectorAll('.game-btn'); // Or use your game card class
-
-    filterBtn.innerText = filterActive ? "Show Favorites Only (ON)" : "Show Favorites Only (OFF)";
-    filterBtn.classList.toggle('active', filterActive);
-
-    allGameCards.forEach(btn => {
-        const gameName = btn.innerText.trim();
-        const gameCard = btn.closest('div'); // Adjust if your games are in a different tag
-
-        if (filterActive && !favorites.includes(gameName)) {
-            gameCard.classList.add('hidden-game');
-        } else {
-            gameCard.classList.remove('hidden-game');
-        }
-    });
-}
-        </script>
