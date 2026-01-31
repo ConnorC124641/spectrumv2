@@ -99,66 +99,127 @@
         </div>
     </div>
 
-    <script>
-        const peer = new Peer();
-        let conn;
+   <script>
+    // --- CHAT LOGIC (Keep this as is) ---
+    const peer = new Peer();
+    let conn;
 
-        // Display my ID
-        peer.on('open', (id) => {
-            document.getElementById('my-id').innerText = id;
+    peer.on('open', (id) => { document.getElementById('my-id').innerText = id; });
+    peer.on('connection', (c) => { conn = c; setupConnection(); });
+
+    function connectToFriend() {
+        const friendId = document.getElementById('friend-id').value;
+        if (friendId) { conn = peer.connect(friendId); setupConnection(); }
+    }
+
+    function setupConnection() {
+        conn.on('open', () => {
+            addToChat('System', 'Connected!');
+            conn.on('data', (data) => addToChat('Friend', data));
         });
+    }
 
-        // Listen for incoming connection
-        peer.on('connection', (c) => {
-            conn = c;
-            setupConnection();
-        });
-
-        // Connect to friend
-        function connectToFriend() {
-            const friendId = document.getElementById('friend-id').value;
-            if (friendId) {
-                conn = peer.connect(friendId);
-                setupConnection();
-            } else {
-                alert("Please enter a Friend ID first.");
-            }
+    function sendMessage() {
+        const msg = document.getElementById('msg-input').value;
+        if (msg && conn) {
+            conn.send(msg);
+            addToChat('Me', msg);
+            document.getElementById('msg-input').value = '';
         }
+    }
 
-        // Setup chat logic
-        function setupConnection() {
-            conn.on('open', () => {
-                addToChat('System', 'Connected!');
-                
-                // Receive messages
-                conn.on('data', (data) => {
-                    addToChat('Friend', data);
-                });
+    function addToChat(user, text) {
+        const box = document.getElementById('chat-box');
+        let color = '#ccc';
+        if (user === 'Me') color = '#bc13fe';
+        if (user === 'Friend') color = '#00d4ff';
+        box.innerHTML += `<div style="margin-bottom: 5px;"><strong style="color: ${color}">${user}:</strong> ${text}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }
+
+    // --- UPDATED ADMIN LOGIC (FIXED) ---
+    async function updateServer(lockStatus, timeVal = null) {
+        const token = document.getElementById('gh-token').value.trim(); // .trim() removes accidental spaces
+        const statusLabel = document.getElementById('admin-status');
+
+        if (!token) { 
+            statusLabel.innerText = "❌ Missing Token!";
+            statusLabel.style.color = "red";
+            return; 
+        }
+        
+        statusLabel.innerText = "Connecting...";
+        statusLabel.style.color = "yellow";
+
+        // YOUR GITHUB INFO
+        const user = "ConnorC124641";
+        const repo = "spectrum";
+        
+        // We add a timestamp to the URL to prevent the "SHA" cache error
+        const url = `https://api.github.com/repos/${user}/${repo}/contents/server.json?t=${Date.now()}`;
+
+        try {
+            // 1. GET THE CURRENT FILE (To find the SHA)
+            const getReq = await fetch(url, { 
+                headers: { 
+                    "Authorization": `token ${token}`,
+                    "Cache-Control": "no-cache" // Force fresh file
+                } 
             });
-        }
-
-        // Send message
-        function sendMessage() {
-            const msg = document.getElementById('msg-input').value;
-            if (msg && conn) {
-                conn.send(msg);
-                addToChat('Me', msg);
-                document.getElementById('msg-input').value = '';
-            } else if (!conn) {
-                alert("You need to connect to a friend first!");
-            }
-        }
-
-        // Add to chat box
-        function addToChat(user, text) {
-            const box = document.getElementById('chat-box');
-            let color = '#ccc';
-            if (user === 'Me') color = '#bc13fe';
-            if (user === 'Friend') color = '#00d4ff';
             
-            box.innerHTML += `<div style="margin-bottom: 5px;"><strong style="color: ${color}">${user}:</strong> ${text}</div>`;
-            box.scrollTop = box.scrollHeight;
+            if (getReq.status === 401) throw new Error("Token Invalid/Expired");
+            if (getReq.status === 404) throw new Error("File server.json not found");
+            if (!getReq.ok) throw new Error("Get Error: " + getReq.status);
+            
+            const fileData = await getReq.json();
+            const currentContent = JSON.parse(atob(fileData.content));
+
+            // 2. PREPARE NEW CONTENT
+            const newContent = {
+                locked: lockStatus !== null ? lockStatus : currentContent.locked,
+                password: currentContent.password,
+                play_limit_minutes: timeVal !== null ? parseInt(timeVal) : currentContent.play_limit_minutes,
+                shutdown_message: currentContent.shutdown_message
+            };
+
+            // 3. SEND UPDATE (PUT)
+            // We use the URL without the ?t= timestamp for the PUT request
+            const cleanUrl = `https://api.github.com/repos/${user}/${repo}/contents/server.json`;
+            
+            const putReq = await fetch(cleanUrl, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: "Admin Panel Update",
+                    content: btoa(JSON.stringify(newContent, null, 2)),
+                    sha: fileData.sha // This MUST match the fresh SHA we just got
+                })
+            });
+
+            if (putReq.ok) {
+                statusLabel.innerText = "✅ Success! Wait 60s.";
+                statusLabel.style.color = "#00ff00";
+            } else {
+                const errData = await putReq.json();
+                throw new Error("Update Failed: " + (errData.message || putReq.status));
+            }
+
+        } catch (err) {
+            console.error(err);
+            statusLabel.innerText = "❌ " + err.message;
+            statusLabel.style.color = "red";
+            alert(err.message); // This will pop up and tell you exactly what is wrong
         }
+    }
+
+    function updateTime() {
+        const t = document.getElementById('admin-time').value;
+        if(t) updateServer(null, t);
+    }
+</script>
     </script>
 </body>
 </html>
