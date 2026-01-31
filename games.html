@@ -750,7 +750,7 @@
             document.documentElement.style.setProperty('--secondary', localStorage.getItem('secondaryColor'));
         }
     </script>
-    // 1. RUN ON START: Auto-add buttons and check favorites
+    <script>
 document.addEventListener("DOMContentLoaded", () => {
     const gameButtons = document.querySelectorAll('.game-btn');
     const favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
@@ -821,5 +821,6 @@ function toggleFavFilter() {
         }
     });
 }
+        </script>
 </body>
 </html>
