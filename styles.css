@@ -201,3 +201,7 @@ input[type="text"], input[type="color"] {
 .hidden-game {
     display: none !important;
 }
+/* This class hides games instantly without complex calculations */
+.hidden-game {
+    display: none !important;
+}
