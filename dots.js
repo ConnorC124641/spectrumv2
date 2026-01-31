@@ -18,7 +18,7 @@ canvas.style.pointerEvents = 'none';
 canvas.style.background = '#0a0a0a'; 
 
 let particles = [];
-const particleCount = 100;
+const particleCount = 60;
 
 function resize() {
     canvas.width = window.innerWidth;
