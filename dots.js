@@ -141,31 +141,36 @@ let filterActive = false;
 function toggleFavFilter() {
     filterActive = !filterActive;
     
-    // Get all the data we need upfront (Read phase)
     const filterBtn = document.getElementById('filter-favs');
     const favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
     const gameButtons = document.querySelectorAll('.game-btn');
+    // Find the main container holding all games (usually class 'games-grid' or similar)
+    const grid = document.querySelector('.games-grid') || document.body; 
 
-    // Update the button text immediately
+    // Update Button Text
     if (filterBtn) {
         filterBtn.innerText = filterActive ? "Show Favorites Only (ON)" : "Show Favorites Only (OFF)";
         filterBtn.classList.toggle('active', filterActive);
     }
 
-    // Tell browser to update the games in the next frame (Write phase)
-    requestAnimationFrame(() => {
-        gameButtons.forEach(btn => {
-            const gameName = btn.innerText.trim();
-            // Find the container (card or wrapper)
-            const container = btn.closest('.game-card') || btn.closest('.game-wrapper') || btn.parentElement;
+    // 1. Hide the grid temporarily to stop "repainting" every single change
+    grid.style.display = 'none';
 
-            // If Filter is ON and game is NOT in favorites -> Hide it
-            if (filterActive && !favorites.includes(gameName)) {
-                container.classList.add('hidden-game');
-            } else {
-                // Otherwise show it
-                container.classList.remove('hidden-game');
-            }
-        });
+    // 2. Do the heavy lifting while invisible (fast!)
+    gameButtons.forEach(btn => {
+        const gameName = btn.innerText.trim();
+        const container = btn.closest('.game-card') || btn.closest('.game-wrapper') || btn.parentElement;
+
+        if (filterActive && !favorites.includes(gameName)) {
+            container.classList.add('hidden-game');
+        } else {
+            container.classList.remove('hidden-game');
+        }
     });
+
+    // 3. Show the grid again
+    // We use a tiny timeout to let the browser catch its breath
+    setTimeout(() => {
+        grid.style.display = 'flex'; // Or 'grid' or 'block', whatever your CSS uses
+    }, 0);
 }
