@@ -136,6 +136,41 @@ function setupFavorites() {
         btn.after(favBtn);
     });
 }
+let filterActive = false;
+
+function toggleFavFilter() {
+    filterActive = !filterActive;
+    const filterBtn = document.getElementById('filter-favs');
+    const favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
+    
+    // Find all game buttons
+    const gameButtons = document.querySelectorAll('.game-btn');
+
+    // Update the UI of the toggle button
+    if (filterBtn) {
+        filterBtn.innerText = filterActive ? "Show Favorites Only (ON)" : "Show Favorites Only (OFF)";
+        filterBtn.classList.toggle('active', filterActive);
+    }
+
+    gameButtons.forEach(btn => {
+        const gameName = btn.innerText.trim();
+        
+        // Find the "Card" or "Container" the button is inside of
+        // We look for a <div> or <a> that contains the button
+        const gameContainer = btn.closest('.game-card') || btn.parentElement;
+
+        if (filterActive) {
+            if (!favorites.includes(gameName)) {
+                gameContainer.style.display = 'none'; // Hide non-favorites
+            } else {
+                gameContainer.style.display = 'block'; // Show favorites
+            }
+        } else {
+            // If filter is OFF, show everything
+            gameContainer.style.display = 'block';
+        }
+    });
+}
 
 // This tells the browser: "Wait until EVERYTHING is loaded, then wait 1 second"
 window.addEventListener('load', () => {
