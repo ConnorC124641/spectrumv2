@@ -91,7 +91,6 @@ function animate() {
     }
     requestAnimationFrame(animate);
 }
-
 animate();
 // Add this at the very bottom of dots.js
 function setupFavorites() {
