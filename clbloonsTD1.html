@@ -36,7 +36,7 @@
       display: block;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.12.18/ruffle.min.js"></script>
 </head>
 <body>
   <div id="flash-container"></div>
@@ -72,11 +72,12 @@
         player.style.height = "100%";
         player.style.background = "black";
         container.appendChild(player);
-        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@main/bloons-tower-defense-1.swf");
+        player.load("https://cdn.jsdelivr.net/gh/ohio-math/swfs/bloons-td-5.swf");
       } else {
         container.textContent = "Ruffle failed to load.";  
       }
     });
   </script>
 </body>
+
 </html>
