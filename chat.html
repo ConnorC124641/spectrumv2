@@ -221,5 +221,50 @@
     }
 </script>
     </script>
+    // --- SPECTRUM GATEKEEPER (LOCK SYSTEM) ---
+(async function() {
+    const user = "ConnorC124641";
+    const repo = "spectrum";
+    
+    // 1. Force a fresh check (Bypass Cache)
+    const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}&r=${Math.random()}`;
+
+    try {
+        const response = await fetch(url, { cache: "no-store" });
+        
+        if (!response.ok) return; // If internet is down, let them play (optional)
+
+        const data = await response.json();
+
+        // 2. If Locked, nuke the page immediately
+        if (data.locked === true) {
+            document.body.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100vw; height: 100vh;
+                    background-color: black;
+                    color: red;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 999999; /* Higher than everything else */
+                    font-family: sans-serif;
+                    text-align: center;
+                ">
+                    <h1 style="font-size: 3rem; margin-bottom: 20px;">🚫 SYSTEM LOCKED</h1>
+                    <p style="color: white; font-size: 1.5rem; max-width: 80%;">${data.shutdown_message || "The site is currently down for maintenance."}</p>
+                    <p style="color: #555; margin-top: 50px; font-size: 0.8rem;">Session ID: ${Date.now()}</p>
+                </div>
+            `;
+            // Stop any background scripts (like dots)
+            throw new Error("Site Locked - Stopping Scripts"); 
+        }
+
+    } catch (error) {
+        console.log("Gatekeeper Status: Open");
+    }
+})();
 </body>
 </html>
