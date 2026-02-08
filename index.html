@@ -88,7 +88,7 @@
         
         <input type="password" id="pass" placeholder="ENTER PASSCODE">
         
-        <button onclick="login()">UNLOCK</button>
+        <button id="unlock">UNLOCK</button>
         
         <p id="msg" class="error">ACCESS DENIED</p>
     </div>
@@ -104,9 +104,13 @@
         async function login() {
             var input = document.getElementById("pass").value;
             let hashed = await sha256(input);
+
+            console.log(input);
+            console.log(hashed);
             
             // PASSWORD IS HERE
-            if (input === "c600edf6ce0739a94a591d68b4a42d84b76a117e0395a1bb88c36aa5ae9024d7") {
+            if (hashed === "c600edf6ce0739a94a591d68b4a42d84b76a117e0395a1bb88c36aa5ae9024d7") {
+                console.log("Correct password");
                 // Set cookie for iPad/Safari support
                 var d = new Date();
                 d.setTime(d.getTime() + (30*24*60*60*1000));
@@ -115,10 +119,14 @@
                 
                 window.location.href = "house.html";
             } else {
+                console.log("Incorrect password");
                 document.getElementById("msg").style.display = "block";
                 document.getElementById("pass").value = "";
+                alert("Wrong");
             }
         }
+
+        document.getElementById("unlock").onclick = login;
     </script>
 </body>
 </html>
