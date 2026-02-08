@@ -93,17 +93,20 @@
         <p id="msg" class="error">ACCESS DENIED</p>
     </div>
 
-    <script>
+    <script type="module">
+        import { sha256 } from "https://cdn.jsdelivr.net/npm/hash-wasm@4.12.0/dist/index.esm.min.js"; // SHA256 hashing
+        
         // Check for Enter key
         document.getElementById("pass").addEventListener("keypress", function(e) {
             if (e.key === "Enter") login();
         });
 
-        function login() {
+        async function login() {
             var input = document.getElementById("pass").value;
+            let hashed = await sha256(input);
             
             // PASSWORD IS HERE
-            if (input === "vscode") {
+            if (input === "c600edf6ce0739a94a591d68b4a42d84b76a117e0395a1bb88c36aa5ae9024d7") {
                 // Set cookie for iPad/Safari support
                 var d = new Date();
                 d.setTime(d.getTime() + (30*24*60*60*1000));
