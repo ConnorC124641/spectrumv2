@@ -222,23 +222,38 @@
 </script>
     </script>
     // --- SPECTRUM GATEKEEPER (LOCK SYSTEM) ---
-(async function() {
+async function checkLockdown() {
+    // 1. Check the current URL
+    const currentPage = window.location.pathname;
+    
+    // 2. The VIP Bypass: Add your chat/admin filenames here!
+    // If the URL contains any of these names, the script stops and lets you in.
+    if (currentPage.includes('chat') || currentPage.includes('admin')) {
+        console.log("🛡️ Admin Bypass Active: Lockdown ignored for this page.");
+        return; // This completely stops the lockdown check
+    }
+
+    // 3. Fetch the lock status (with the ?t= cache-buster we talked about!)
     const user = "ConnorC124641";
     const repo = "spectrum";
+    const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}`;
     
-    // 1. Force a fresh check (Bypass Cache)
-    const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}&r=${Math.random()}`;
-
     try {
-        const response = await fetch(url, { cache: "no-store" });
-        
-        if (!response.ok) return; // If internet is down, let them play (optional)
-
+        const response = await fetch(url);
         const data = await response.json();
-
-        // 2. If Locked, nuke the page immediately
+        
+        // 4. If the site is actually locked, kick them to the home/lock screen
         if (data.locked === true) {
-            document.body.innerHTML = `
+            // Change this to whatever your lock screen file is!
+            window.location.href = 'index.html'; 
+        }
+    } catch (error) {
+        console.error("Lockdown check failed:", error);
+    }
+}
+
+// Run the function as soon as the page loads
+checkLockdown();
                 <div style="
                     position: fixed;
                     top: 0; left: 0;
