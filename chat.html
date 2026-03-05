@@ -12,54 +12,15 @@
             window.location.href = "index.html";
         }
     </script>
+    
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-
     <link rel="stylesheet" href="styles.css?v=8">
+    
     <style>
-        body { 
-            font-family: 'Orbitron', sans-serif; 
-            background-color: #050505;
-            color: white;
-            margin: 0;
-        }
-
-        .chat-layout {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 90vh; /* Keeps it centered vertically */
-            padding: 20px;
-        }
-
-        .chat-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .chat-header h2 {
-            color: #00ffff;
-            text-shadow: 0 0 15px #00ffff;
-            letter-spacing: 4px;
-            margin: 0;
-        }
-
-        /* CONTAINER FOR THE CBOX */
-        .cbox-wrapper {
-            width: 100%;
-            max-width: 900px; /* Limits width on big screens */
-            background: #111;
-            padding: 10px;
-            border: 2px solid #ff00ff; /* Pink border to match theme */
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
-            box-sizing: border-box;
-        }
-
-        /* Makes the iframe inside responsive */
-        iframe {
-            border-radius: 5px;
-        }
+        body { font-family: 'Orbitron', sans-serif; background-color: #050505; color: white; margin: 0; }
+        .sidebar { /* Your existing sidebar styles from styles.css */ }
+        .game-container { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 12px; border: 1px solid #bc13fe; }
+        .game-btn { background: #bc13fe; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -67,22 +28,19 @@
     <div class="sidebar">
         <h1 style="font-size: 1.5rem; letter-spacing: 2px;">SPECTRUM</h1>
         <a href="home.html" class="nav-btn pink">HOME</a>
-        <a href="games.html" class="nav-btn blue">GAMES</a>
+        <a href="gam.html" class="nav-btn blue">GAMES</a>
         <a href="chat.html" class="nav-btn pink" style="color: white; border-left: 3px solid #ff00ff;">CHAT</a>
         <a href="settings.html" class="nav-btn blue">SETTINGS</a>
     </div>
- <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <div style="flex-grow: 1; padding: 20px; color: white; display: flex; justify-content: center; align-items: flex-start;">
-        
+
+    <div style="flex-grow: 1; padding: 20px; color: white; display: flex; justify-content: center; align-items: flex-start; margin-left: 200px;">
         <div class="game-container" style="width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 10px;">
             <h2 style="text-align: center; margin-top: 0;">P2P Chat</h2>
             
             <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; border-bottom: 2px solid #bc13fe;">
                 <p style="margin-top: 0;">My ID: <strong id="my-id" style="color: #bc13fe;">Generating...</strong></p>
-                
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="friend-id" placeholder="Paste Friend's ID" style="flex-grow: 1; padding: 10px; border-radius: 5px; border: none;">
-                    
                     <button class="game-btn" onclick="connectToFriend()">Connect</button>
                 </div>
             </div>
@@ -93,14 +51,13 @@
 
             <div style="display: flex; gap: 10px;">
                 <input type="text" id="msg-input" placeholder="Type a message..." style="flex-grow: 1; padding: 10px; border-radius: 5px; border: none;">
-                
                 <button class="game-btn" onclick="sendMessage()">Send</button>
             </div>
         </div>
     </div>
 
-   <script>
-    // --- CHAT LOGIC (Keep this as is) ---
+    <script>
+    // --- P2P CHAT LOGIC ---
     const peer = new Peer();
     let conn;
 
@@ -137,149 +94,22 @@
         box.scrollTop = box.scrollHeight;
     }
 
-    // --- UPDATED ADMIN LOGIC (FIXED) ---
-    async function updateServer(lockStatus, timeVal = null) {
-        const token = document.getElementById('gh-token').value.trim(); // .trim() removes accidental spaces
-        const statusLabel = document.getElementById('admin-status');
-
-        if (!token) { 
-            statusLabel.innerText = "❌ Missing Token!";
-            statusLabel.style.color = "red";
+    // --- SPECTRUM GATEKEEPER (LOCK SYSTEM) ---
+    (async function checkLockdown() {
+        const currentPage = window.location.pathname;
+        
+        // ADMIN BYPASS: If the file is 'chat.html', don't lock the screen!
+        if (currentPage.includes('chat.html')) {
+            console.log("🛡️ Admin Bypass Active: Chat is always accessible.");
             return; 
         }
-        
-        statusLabel.innerText = "Connecting...";
-        statusLabel.style.color = "yellow";
 
-        // YOUR GITHUB INFO
         const user = "ConnorC124641";
         const repo = "spectrum";
+        const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}`;
         
-        // We add a timestamp to the URL to prevent the "SHA" cache error
-        const url = `https://api.github.com/repos/${user}/${repo}/contents/server.json?t=${Date.now()}`;
-
         try {
-            // 1. GET THE CURRENT FILE (To find the SHA)
-            const getReq = await fetch(url, { 
-                headers: { 
-                    "Authorization": `token ${token}`,
-                    "Cache-Control": "no-cache" // Force fresh file
-                } 
-            });
+            const response = await fetch(url);
+            const data = await response.json();
             
-            if (getReq.status === 401) throw new Error("Token Invalid/Expired");
-            if (getReq.status === 404) throw new Error("File server.json not found");
-            if (!getReq.ok) throw new Error("Get Error: " + getReq.status);
-            
-            const fileData = await getReq.json();
-            const currentContent = JSON.parse(atob(fileData.content));
-
-            // 2. PREPARE NEW CONTENT
-            const newContent = {
-                locked: lockStatus !== null ? lockStatus : currentContent.locked,
-                password: currentContent.password,
-                play_limit_minutes: timeVal !== null ? parseInt(timeVal) : currentContent.play_limit_minutes,
-                shutdown_message: currentContent.shutdown_message
-            };
-
-            // 3. SEND UPDATE (PUT)
-            // We use the URL without the ?t= timestamp for the PUT request
-            const cleanUrl = `https://api.github.com/repos/${user}/${repo}/contents/server.json`;
-            
-            const putReq = await fetch(cleanUrl, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `token ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: "Admin Panel Update",
-                    content: btoa(JSON.stringify(newContent, null, 2)),
-                    sha: fileData.sha // This MUST match the fresh SHA we just got
-                })
-            });
-
-            if (putReq.ok) {
-                statusLabel.innerText = "✅ Success! Wait 60s.";
-                statusLabel.style.color = "#00ff00";
-            } else {
-                const errData = await putReq.json();
-                throw new Error("Update Failed: " + (errData.message || putReq.status));
-            }
-
-        } catch (err) {
-            console.error(err);
-            statusLabel.innerText = "❌ " + err.message;
-            statusLabel.style.color = "red";
-            alert(err.message); // This will pop up and tell you exactly what is wrong
-        }
-    }
-
-    function updateTime() {
-        const t = document.getElementById('admin-time').value;
-        if(t) updateServer(null, t);
-    }
-</script>
-    </script>
-    // --- SPECTRUM GATEKEEPER (LOCK SYSTEM) ---
-async function checkLockdown() {
-    // 1. Check the current URL
-    const currentPage = window.location.pathname;
-    
-    // 2. The VIP Bypass: Add your chat/admin filenames here!
-    // If the URL contains any of these names, the script stops and lets you in.
-    if (currentPage.includes('chat') || currentPage.includes('admin')) {
-        console.log("🛡️ Admin Bypass Active: Lockdown ignored for this page.");
-        return; // This completely stops the lockdown check
-    }
-
-    // 3. Fetch the lock status (with the ?t= cache-buster we talked about!)
-    const user = "ConnorC124641";
-    const repo = "spectrum";
-    const url = `https://raw.githubusercontent.com/${user}/${repo}/main/server.json?t=${Date.now()}`;
-    
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        // 4. If the site is actually locked, kick them to the home/lock screen
-        if (data.locked === true) {
-            // Change this to whatever your lock screen file is!
-            window.location.href = 'index.html'; 
-        }
-    } catch (error) {
-        console.error("Lockdown check failed:", error);
-    }
-}
-
-// Run the function as soon as the page loads
-checkLockdown();
-                <div style="
-                    position: fixed;
-                    top: 0; left: 0;
-                    width: 100vw; height: 100vh;
-                    background-color: black;
-                    color: red;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 999999; /* Higher than everything else */
-                    font-family: sans-serif;
-                    text-align: center;
-                ">
-                    <h1 style="font-size: 3rem; margin-bottom: 20px;">🚫 SYSTEM LOCKED</h1>
-                    <p style="color: white; font-size: 1.5rem; max-width: 80%;">${data.shutdown_message || "The site is currently down for maintenance."}</p>
-                    <p style="color: #555; margin-top: 50px; font-size: 0.8rem;">Session ID: ${Date.now()}</p>
-                </div>
-            `;
-            // Stop any background scripts (like dots)
-            throw new Error("Site Locked - Stopping Scripts"); 
-        }
-
-    } catch (error) {
-        console.log("Gatekeeper Status: Open");
-    }
-})();
-</body>
-</html>
+            if (data.locked === true)
