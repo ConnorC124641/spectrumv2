@@ -175,16 +175,27 @@ function toggleFavFilter() {
     }, 0);
 }
 document.addEventListener('click', function(e) {
-    // Find the closest link with the class 'game-btn'
+    // 1. Did we click the button?
     const btn = e.target.closest('.game-btn');
     
     if (btn) {
-        const gameFile = btn.getAttribute('href');
+        e.preventDefault(); // Stop normal loading
         
-        // Only redirect if there is actually a file name
-        if (gameFile && gameFile !== "#") {
-            e.preventDefault(); 
-            window.location.href = `play.html?game=${gameFile}`;
+        // 2. Find the <a> tag that wraps this button
+        const linkWrapper = btn.closest('a');
+        
+        if (linkWrapper) {
+            // 3. Grab the href from the <a> tag!
+            const gameFile = linkWrapper.getAttribute('href');
+            
+            if (gameFile && gameFile !== "null" && gameFile !== "#") {
+                // Success! Send it to the loader.
+                window.location.href = `play.html?game=${gameFile}`;
+            } else {
+                alert("Error: Link wrapper found, but no file name inside the href.");
+            }
+        } else {
+            alert("Error: Button clicked, but it's not wrapped in an <a> tag.");
         }
     }
 });
