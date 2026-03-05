@@ -175,14 +175,16 @@ function toggleFavFilter() {
     }, 0);
 }
 document.addEventListener('click', function(e) {
-    // Check if the clicked element (or its parent) has the game-btn class
+    // Find the closest link with the class 'game-btn'
     const btn = e.target.closest('.game-btn');
     
     if (btn) {
-        e.preventDefault(); // Stop it from opening the file directly
         const gameFile = btn.getAttribute('href');
         
-        // Redirect to play.html with the game as a parameter
-        window.location.href = `play.html?game=${gameFile}`;
+        // Only redirect if there is actually a file name
+        if (gameFile && gameFile !== "#") {
+            e.preventDefault(); 
+            window.location.href = `play.html?game=${gameFile}`;
+        }
     }
 });
