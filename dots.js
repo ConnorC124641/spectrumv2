@@ -174,3 +174,15 @@ function toggleFavFilter() {
         grid.style.display = 'flex'; // Or 'grid' or 'block', whatever your CSS uses
     }, 0);
 }
+document.addEventListener('click', function(e) {
+    // Check if the clicked element (or its parent) has the game-btn class
+    const btn = e.target.closest('.game-btn');
+    
+    if (btn) {
+        e.preventDefault(); // Stop it from opening the file directly
+        const gameFile = btn.getAttribute('href');
+        
+        // Redirect to play.html with the game as a parameter
+        window.location.href = `play.html?game=${gameFile}`;
+    }
+});
